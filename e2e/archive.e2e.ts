@@ -10,3 +10,11 @@ test('character explorer is directly routable', async ({ page }) => {
   await page.goto('/characters?q=rick&status=all')
   await expect(page.getByRole('heading', { name: /find the/i })).toBeVisible()
 })
+
+test('library route keeps its Zustand snapshot stable', async ({ page }) => {
+  const pageErrors: Error[] = []
+  page.on('pageerror', (error) => pageErrors.push(error))
+  await page.goto('/library')
+  await expect(page.getByRole('heading', { name: /keep the weird/i })).toBeVisible()
+  expect(pageErrors).toEqual([])
+})
