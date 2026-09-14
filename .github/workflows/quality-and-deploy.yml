@@ -1,0 +1,73 @@
+name: Quality and deploy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.21
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+            node_modules/.vite
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock') }}
+      - run: bun ci
+      - run: bun run lint
+      - run: bun run typecheck
+      - run: bun test
+      - run: bun run build
+      - run: bunx playwright install --with-deps chromium
+      - run: bun run test:e2e
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: playwright-report
+          path: playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
+      - uses: actions/upload-artifact@v4
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          name: production-dist
+          path: dist/
+          retention-days: 1
+
+  deploy-production:
+    needs: quality
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      contents: read
+      deployments: write
+    concurrency:
+      group: living-archive-production
+      cancel-in-progress: true
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: production-dist
+          path: dist
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          command: pages deploy dist --project-name=${{ vars.CLOUDFLARE_PAGES_PROJECT }}
