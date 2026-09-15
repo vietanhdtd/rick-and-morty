@@ -1,28 +1,131 @@
-import { useQuery } from '@tanstack/react-query'
-import { Link, createFileRoute } from '@tanstack/react-router'
-import { ArrowLeft, Heart, Orbit, Plus, Radio } from 'lucide-react'
-import { getEntity, idFromApiUrl, queryKeys } from '@/api/rick-and-morty'
-import { CollectionDialog } from '@/components/collection-dialog'
-import { QueryState } from '@/components/query-state'
-import { StatusSignal } from '@/components/status-signal'
-import { useLibraryStore } from '@/store/library'
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowLeft, Radio } from "lucide-react";
+import { motion } from "motion/react";
+import {
+  getEntity,
+  getEpisodes,
+  idFromApiUrl,
+  queryKeys,
+} from "@/api/rick-and-morty";
+import { AppearanceLedger } from "@/components/appearance-ledger";
+import { CollectionPicker } from "@/components/collection-picker";
+import { LibrarySaveButton } from "@/components/library-save-button";
+import { QueryState } from "@/components/query-state";
+import { StatusSignal } from "@/components/status-signal";
 
 function CharacterDetailPage() {
-  const { characterId } = Route.useParams()
-  const query = useQuery({ queryKey: queryKeys.entity('character', characterId), queryFn: () => getEntity('character', characterId) })
-  const saved = useLibraryStore((state) => query.data ? Boolean(state.savedCharacters[query.data.id]) : false)
-  const toggle = useLibraryStore((state) => state.toggleCharacter)
-  const collections = useLibraryStore((state) => state.collections)
-  const toggleInCollection = useLibraryStore((state) => state.toggleInCollection)
-  if (query.isPending) return <QueryState kind="loading" label="character dossier" />
-  if (query.isError || !query.data) return <QueryState kind="error" onRetry={() => query.refetch()} />
-  const character = query.data
-  const originId = idFromApiUrl(character.origin.url)
-  const locationId = idFromApiUrl(character.location.url)
-  return <section className="detail-page"><Link to="/characters" search={{ q: '', status: 'all' }} className="back-link"><ArrowLeft size={16} /> Back to people index</Link><div className="detail-hero"><div className="detail-hero__portrait"><img src={character.image} alt="" /><span>#{String(character.id).padStart(3, '0')}</span></div><div><p className="eyebrow"><Radio size={14} /> Character dossier</p><StatusSignal status={character.status} /><h1>{character.name}</h1><p className="detail-hero__type">{character.type || character.species} · {character.gender}</p><button className={`button ${saved ? 'button--saved' : ''}`} type="button" onClick={() => toggle(character)}>{saved ? <Heart fill="currentColor" size={17} /> : <Plus size={17} />}{saved ? 'Saved to library' : 'Save this signal'}</button></div></div>
-    <div className="fact-grid"><article><span>Origin</span>{originId ? <Link to="/locations/$locationId" params={{ locationId: String(originId) }}>{character.origin.name}</Link> : <strong>{character.origin.name}</strong>}</article><article><span>Last known location</span>{locationId ? <Link to="/locations/$locationId" params={{ locationId: String(locationId) }}>{character.location.name}</Link> : <strong>{character.location.name}</strong>}</article><article><span>Appearances</span><strong>{character.episode.length} episodes</strong></article><article><span>Species classification</span><strong>{character.species}</strong></article></div>
-    {saved && <section className="collection-assignment"><div><p className="eyebrow"><Orbit size={14} /> Organize the signal</p><h2>Place in a constellation</h2></div><CollectionDialog /><div className="collection-checklist">{collections.length ? collections.map((collection) => <label key={collection.id}><input type="checkbox" checked={collection.characterIds.includes(character.id)} onChange={() => toggleInCollection(collection.id, character.id)} /> <span>{collection.name}</span></label>) : <p>Create your first constellation to begin grouping saved characters.</p>}</div></section>}
-  </section>
+  const { characterId } = Route.useParams();
+  const query = useQuery({
+    queryKey: queryKeys.entity("character", characterId),
+    queryFn: () => getEntity("character", characterId),
+  });
+
+  const episodeIds =
+    query.data?.episode
+      .map(idFromApiUrl)
+      .filter((id): id is number => id !== null) ?? [];
+
+  const appearances = useQuery({
+    queryKey: ["character-appearances", characterId, episodeIds],
+    queryFn: () => getEpisodes(episodeIds),
+    enabled: episodeIds.length > 0,
+  });
+
+  if (query.isPending) return <QueryState kind="loading" label="character" />;
+  if (query.isError || !query.data)
+    return <QueryState kind="error" onRetry={() => query.refetch()} />;
+
+  const character = query.data;
+  const originId = idFromApiUrl(character.origin.url);
+  const locationId = idFromApiUrl(character.location.url);
+
+  return (
+    <section className="detail-page">
+      <Link
+        to="/characters"
+        search={{ q: "", status: "all" }}
+        className="back-link"
+      >
+        <ArrowLeft size={16} /> Back to characters
+      </Link>
+      <div className="detail-hero">
+        <motion.div
+          className="detail-hero__portrait"
+          layoutId={`character-avatar-${character.id}`}
+          transition={{ type: "spring", stiffness: 330, damping: 32 }}
+        >
+          <img
+            src={character.image}
+            alt=""
+            width={300}
+            height={300}
+            fetchPriority="high"
+          />
+          <span>#{String(character.id).padStart(3, "0")}</span>
+        </motion.div>
+        <div>
+          <p className="eyebrow">
+            <Radio size={14} /> Character
+          </p>
+          <StatusSignal status={character.status} />
+          <h1>{character.name}</h1>
+          <p className="detail-hero__type">
+            {character.type || character.species} · {character.gender}
+          </p>
+          <div className="detail-hero__actions">
+            <LibrarySaveButton character={character} variant="detail" />
+            <CollectionPicker character={character} />
+          </div>
+        </div>
+      </div>
+      <div className="fact-grid">
+        <article>
+          <span>Origin</span>
+          {originId ? (
+            <Link
+              to="/locations/$locationId"
+              params={{ locationId: String(originId) }}
+            >
+              {character.origin.name}
+            </Link>
+          ) : (
+            <strong>{character.origin.name}</strong>
+          )}
+        </article>
+        <article>
+          <span>Last location</span>
+          {locationId ? (
+            <Link
+              to="/locations/$locationId"
+              params={{ locationId: String(locationId) }}
+            >
+              {character.location.name}
+            </Link>
+          ) : (
+            <strong>{character.location.name}</strong>
+          )}
+        </article>
+        <article>
+          <span>Appearances</span>
+          <strong>{character.episode.length} episodes</strong>
+        </article>
+        <article>
+          <span>Species</span>
+          <strong>{character.species}</strong>
+        </article>
+      </div>
+      {appearances.isPending ? (
+        <QueryState kind="loading" label="episode appearances" />
+      ) : appearances.isError ? (
+        <QueryState kind="error" onRetry={() => appearances.refetch()} />
+      ) : appearances.data?.length ? (
+        <AppearanceLedger episodes={appearances.data} />
+      ) : null}
+    </section>
+  );
 }
 
-export const Route = createFileRoute('/characters/$characterId')({ component: CharacterDetailPage })
+export const Route = createFileRoute("/characters/$characterId")({
+  component: CharacterDetailPage,
+});

@@ -1,61 +1,52 @@
-# Living Archive design system
+# Multiverse Guide design system
 
 ## Intent
 
-Living Archive is not a catalogue. It is a slightly unstable transmission room that gives a newcomer a way into the Rick and Morty universe through real canonical data. The emotional sequence is **encounter → context → curiosity → keep**.
+Multiverse Guide is a polished front-end showcase built on the Rick and Morty API. It helps people find a character, follow their appearances, save favourites, and collect them into personal lists. The flow is **discover → save → group → revisit**.
 
-The memorable image is a black archival terminal punctured by an acidic, spinning portal. The visual language is editorial and technical rather than a direct recreation of the show.
+The visual character is an engineered light field: calm, technical, and information-first, with a small dose of playful motion at meaningful moments. It is not a terminal, archive, dossier, transmission system, or constellation map.
 
 ## Foundations
 
-| Token | Value | Use |
-| --- | --- | --- |
-| Ink | `#090c0b` | dominant field and page background |
-| Panel | `#171e1b` | cards, forms, floating context |
-| Bone | `#f0ede2` | primary copy |
-| Muted | `#9ca69c` | metadata and secondary copy |
-| Portal | `#bdff3f` | active states, calls to action, live signal |
-| Ultraviolet | `#9c8bff` | unknown status and saved state |
-| Signal | `#ff8066` | destructive action and dead status |
+| Token | Use |
+| --- | --- |
+| Paper | cool near-white page surface |
+| Graphite | the one dark information band and high-contrast surfaces |
+| Cobalt | active navigation, focus, primary actions, and selected states |
+| Green / coral / amber | character status and destructive feedback only |
 
-`Syne` is the display face: tight, heavy, and slightly unruly. `DM Mono` makes labels feel like recovered technical records. Never substitute a generic UI sans for either role.
-
-Spacing uses a 4px rhythm. Borders are single-pixel, low-opacity bone; shadows are reserved for dialogs. Image treatment is cool, desaturated portraiture which regains saturation on deliberate hover.
+Use `JetBrains Mono` across display hierarchy, reading, controls, IDs, filters, counts, and compact metadata. Keep the 4px spacing rhythm. Controls use 6px radii; content surfaces use 10px radii. Borders establish structure; shadows are quiet and rare. The system has a light and dark Cobalt mode; a button-origin circular view transition reveals a deliberate user-selected change.
 
 ## Layout
 
-- Desktop: centered 1440px canvas with 4vw page gutters. The home signal grid is asymmetric: character receives the visual lead, then location and episode form a paired secondary field.
-- Tablet: two-column signals and card grids; metadata facts shift to two columns.
-- Mobile: 16px gutters, one-column cards, 68px header, horizontal filter rail, stacked details. Touch actions remain at least 44px in their interactive area.
-- The fixed grain layer is visual-only and never intercepts pointer input.
+- Home is a workbench: an explanatory left column and a live discovery panel, followed by a smaller character shelf.
+- Index pages are search- or list-first. A concise header supports the task; it never acts as a marketing hero.
+- Detail pages lead with an identity block, factual fields, then linked places or episode appearances.
+- Library is a saved-items workspace: lists first, then saved characters not yet assigned.
+- Desktop uses a 1200px content frame; tablet uses two tracks; mobile uses one track, 16px gutters, and 44px minimum touch targets.
 
-## Components and states
+## Content voice
 
-- **Portal hero**: archive status, display headline, single refresh action, two decorative portal rings.
-- **Signal cards**: every signal has source label, factual API field, and an explicit routed action. Character cards also expose save state.
-- **Character card**: portrait, status dot, species, last location, save button. Card click opens the routed dossier; save is a distinct native button.
-- **Query state**: loading uses an orbital loader; error states offer reconnect; empty states explain the outcome and give a next action.
-- **Dossier**: uses one large identity block followed by facts. API relationships become links only when an API resource id exists.
-- **Constellation**: a user-named group with count, open action, and an accessible Base UI delete confirmation.
+Use direct labels: **Characters**, **Places**, **Episodes**, **Saved**, and **Lists**. Describe data plainly: “episode appearances”, “residents”, “search results”, and “saved characters”. Avoid invented claims, lore-heavy metaphors, and decorative section labels.
 
-## Motion specification
+## Motion
 
-| Interaction | Motion | Default | Reduced motion |
-| --- | --- | --- | --- |
-| Home entry | heading moves 25px upward and fades in | 750ms, `0.16 1 0.3 1` | opacity only |
-| Portal rings | slow rotation / orbital drift | 10–26s, infinite | no loop |
-| Signal refresh | outgoing fade, replacement card layout transition | 220–440ms | 120ms fade |
-| Card entry | capped 45ms stagger, 20px rise | 440ms | opacity only, no stagger |
-| Card hover | 7px upward lift and image scale | 200–600ms | none |
-| Save | instant colour/state response | spring-like Motion transition | instant |
-| Dialog | backdrop fade, centered panel | 180ms | fade only |
+Motion has a job and respects reduced-motion preferences.
 
-All essential content is present before or without its animation. Motion is limited to compositor-friendly opacity and transforms. Lenis is not initialized when `prefers-reduced-motion` is enabled.
+| Interaction | Default | Reduced motion |
+| --- | --- | --- |
+| Route change | 220ms fade and 10px rise | 120ms fade |
+| Character card to detail | shared portrait spring | static continuity |
+| Save / unsave | 160–220ms icon morph and text response | instant state change |
+| Refresh discovery | 220ms opacity replacement | 120ms opacity replacement |
+| Dialog | 180ms opacity and small scale | opacity only |
+
+Do not animate typing, filtering, keyboard-driven actions, or core navigation. Hover motion is only available on fine-pointer devices. Animate transforms and opacity only.
 
 ## Accessibility and failure handling
 
-- All icon actions include labels; status includes text as well as colour.
-- Base UI dialogs trap focus and return it to the trigger. Escape closes dialogs.
-- Focus indicators use portal green with a visible offset.
-- API 404 search responses become empty states, not generic failures. Other failures retain a reconnect control.
-- Browser storage is an enhancement: API exploration remains available if persistence is unavailable.
+- Every icon-only action has an accessible name; semantic status has text as well as colour.
+- Focus rings use cobalt with a visible offset.
+- Dialogs return focus to their trigger and close with Escape.
+- API not-found results explain that no matches were found; other failures offer a retry.
+- Stored favourites and lists are enhancements: browsing stays available without persistence.

@@ -4,5 +4,9 @@ dist
 .dev.vars
 playwright-report
 test-results
+tmp/
 styled-system
 *.tsbuildinfo
+.agents/
+.claude/
+.hallmark/

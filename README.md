@@ -1,67 +1,66 @@
-# Living Archive
+# Multiverse Guide
 
-An animated, browser-persisted guide to the Rick and Morty multiverse. It is a Vite + React SPA that turns canonical character, location, and episode data into a navigable archive.
+Multiverse Guide is a responsive front-end showcase for exploring the Rick and Morty universe. It reads canonical character, location, and episode data from the public [Rick and Morty API](https://rickandmortyapi.com/documentation/), lets visitors search and save characters, and organize them into personal lists that persist in their browser.
+
+## Exercise requirement coverage
+
+| Requirement | Delivery |
+| --- | --- |
+| Website and framework | A Vite + React single-page application with eight navigable views: home, character index and detail, location index and detail, episode index and detail, and saved library. The layout adapts from desktop down to mobile. |
+| API usage | TanStack Query reads characters, locations, and episodes over HTTPS from the Rick and Morty API. No API key or backend is required. |
+| Search | The character index has debounced name search, an alive/dead/unknown filter, URL-synchronised search state, and paginated results. |
+| Favourites and groups | A character can be saved or removed from any character card. Saved characters can be assigned to or removed from named lists; both lists and favourites can be deleted. |
+| Storage | Zustand persistence stores saved-character snapshots and lists in `localStorage`, so they are restored on the next visit. Removing a favourite also removes its list references; deleting a list retains its saved characters. |
+| Hosting and code | The repository includes a GitHub Actions quality-and-deploy workflow for Cloudflare Pages. Configure the deployment values below before pushing `main`. |
 
 ## Run locally
 
-Prerequisites: Bun `1.2.21` (the project runtime) and Node `22+` for tool compatibility.
+Prerequisites:
+
+- Bun `1.2.21` or later (the pinned project package manager)
+- Node.js `22` or later for tool compatibility
 
 ```sh
 bun install
 bun run dev
 ```
 
-Other commands:
+Open the URL shown by Vite (normally `http://localhost:5173`).
+
+### VS Code
+
+Install the recommended **Biome** extension when VS Code prompts you. The workspace settings use Biome as the formatter for JavaScript, TypeScript, JSON, and CSS, then format, apply safe fixes, and organize imports whenever you save.
+
+### Validation commands
 
 ```sh
-bun run typecheck
 bun run lint
+bun run typecheck
 bun test
 bun run build
-bun run test:e2e
 ```
 
-Install Playwright's Chromium browser before the first local E2E run:
+## Architecture and decisions
 
-```sh
-bunx playwright install chromium
-```
+- **Vite + React** keeps the application small and fast to start, while **TanStack Router** supplies typed, file-based routes and URL-backed character search state.
+- **TanStack Query** owns remote API state: requests, caching, pagination, loading, empty, and error states. API schemas and request functions live in `src/api`, keeping page components focused on presentation.
+- **Zustand with `persist`** owns only user-controlled local state: favourite character snapshots and named lists. This cleanly separates browser-owned state from API data.
+- Reusable visual components live in `src/components`; route files own route parameters and search validation. **Panda CSS** provides typed design tokens, **Base UI** supplies accessible dialogs and focus management, and **Motion** handles non-essential interface motion with reduced-motion alternatives.
+- The visual direction is a light, technical guide rather than a direct reproduction of the source material. It uses semantic controls, visible focus states, text-backed status indicators, responsive layouts, and restrained motion.
 
-## Architecture
+## Two-hour scope and trade-offs
 
-- **Vite + React** delivers a static SPA; Cloudflare Pages supplies history-route fallback in production.
-- **TanStack Router** provides file-based, code-split routes and typed character-search URL state.
-- **TanStack Query** owns all Rick and Morty API data, caching, pagination, request/error states, and random world signals.
-- **Zustand persist** stores only user-owned favourite character snapshots and named constellations in local storage.
-- **Base UI** is used for accessible dialogs and focus management; **Panda CSS** owns typed design tokens and generated styling utilities; custom CSS builds the expressive archive art direction.
-- **Motion** drives entrance, layout, hover, and save interactions; **Lenis** enhances scrolling only when reduced motion is not requested.
+The core flow was prioritised over a backend: discover canonical data, search characters, save favourites, group them, return later, and remove either favourites or groups safely. Characters are the saveable entity; locations and episodes provide richer browsing and routed context without multiplying the persistence model.
 
-The app uses the public [Rick and Morty API](https://rickandmortyapi.com/documentation/) over HTTPS. No API key or backend is required.
+Persistence is intentionally browser-local rather than account-based. Home-page recommendations are random API draws instead of personalised recommendations, and the application does not require an API proxy or secret. These choices keep the exercise deployable as a static site while preserving a clear state boundary.
 
-## Routes
+## Quality and deployment
 
-| Route | Purpose |
-| --- | --- |
-| `/` | Random character, location, and episode signals; character suggestions |
-| `/characters` | URL-synchronised name/status search and paginated character results |
-| `/characters/$characterId` | Character facts, save action, and constellation assignment |
-| `/locations` and `/locations/$locationId` | Location archive and resident suggestions |
-| `/episodes` and `/episodes/$episodeId` | Episode archive and cast suggestions |
-| `/library` | Saved signals, constellation creation, deletion, and grouping |
+The GitHub Actions workflow runs Biome linting, type checking, Bun unit tests, and a production build on pull requests and pushes to `main`. On a successful `main` build, it deploys the verified `dist/` artifact to Cloudflare Pages.
 
-## CI/CD
-
-GitHub Actions runs linting, type checking, Bun tests, production build, and Playwright on every pull request and `main` push. A successful `main` build uploads the verified `dist/` artifact to Cloudflare Pages using Wrangler Direct Upload.
-
-Configure these GitHub secrets before deployment:
+Before enabling deployment, configure these GitHub secrets:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-Set `CLOUDFLARE_PAGES_PROJECT` as a repository variable. Keep Cloudflare Pages Git integration disconnected: the workflow owns production deployment. Protect `main` by requiring the `quality` check.
-
-## Deliberate trade-offs and future work
-
-This intentionally exceeds the original exercise's two-hour guidance to demonstrate routed architecture, animation, tests, and delivery automation. The trade-off is that recommendations are random API draws rather than a server-backed personalisation model.
-
-Given more time, I would add shareable collection URLs with authentication, an offline cache, visual regression snapshots, external monitoring, and preview deployments for trusted internal pull requests.
+Also set `CLOUDFLARE_PAGES_PROJECT` as a repository variable, keep Cloudflare Pages Git integration disconnected, and protect `main` with the `quality` check.

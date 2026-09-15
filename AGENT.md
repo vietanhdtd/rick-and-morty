@@ -26,4 +26,4 @@ bun test
 bun run build
 ```
 
-Run `bun run test:e2e` when changing route behavior or primary interactions. Do not hand-edit `src/routeTree.gen.ts` or `styled-system`; both are generated.
+Do not hand-edit `src/routeTree.gen.ts` or `styled-system`; both are generated.

@@ -1,0 +1,11 @@
+{
+  "js/ts.experimental.useTsgo": true,
+  "[javascript][javascriptreact][typescript][typescriptreact][json][jsonc][css]": {
+    "editor.defaultFormatter": "biomejs.biome",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll.biome": "explicit",
+      "source.organizeImports.biome": "explicit"
+    }
+  }
+}

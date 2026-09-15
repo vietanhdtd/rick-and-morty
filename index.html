@@ -3,9 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#090c0b" />
+    <meta name="theme-color" content="#f8f9fc" />
     <meta name="description" content="A living archive for the Rick and Morty multiverse." />
-    <title>Living Archive</title>
+    <title>Multiverse Guide</title>
+    <script>
+      (() => {
+        try {
+          const saved = localStorage.getItem("multiverse-guide-theme");
+          const isDark = saved === "dark" || (!saved && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          document.documentElement.classList.toggle("dark", isDark);
+          document.documentElement.style.colorScheme = isDark ? "dark" : "light";
+          document.querySelector('meta[name="theme-color"]').setAttribute("content", isDark ? "#11141b" : "#f8f9fc");
+        } catch {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

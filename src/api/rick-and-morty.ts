@@ -21,8 +21,8 @@ export class ApiError extends Error {
 async function request<T>(path: string, schema: z.ZodType<T>): Promise<T> {
   const response = await fetch(`${API_URL}${path}`)
   if (!response.ok) {
-    if (response.status === 404) throw new ApiError('No signals found for that frequency.', 404)
-    throw new ApiError('The archive connection is unstable. Try again.', response.status)
+    if (response.status === 404) throw new ApiError('No results found.', 404)
+    throw new ApiError('We could not load the guide. Try again.', response.status)
   }
   return schema.parse(await response.json())
 }
@@ -47,6 +47,12 @@ export function getEntity(resource: ResourceKind, id: string | number): Promise<
 export function getCharacters(ids: number[]) {
   if (!ids.length) return Promise.resolve([] as Character[])
   return request(`/character/${ids.join(',')}`, z.union([characterSchema, z.array(characterSchema)]))
+    .then((result) => Array.isArray(result) ? result : [result])
+}
+
+export function getEpisodes(ids: number[]) {
+  if (!ids.length) return Promise.resolve([] as Episode[])
+  return request(`/episode/${ids.join(',')}`, z.union([episodeSchema, z.array(episodeSchema)]))
     .then((result) => Array.isArray(result) ? result : [result])
 }
 
