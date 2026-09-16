@@ -11,12 +11,15 @@ import { CharacterCard } from "@/components/character-card";
 import { QueryState } from "@/components/query-state";
 import { RosterReadout } from "@/components/roster-readout";
 
+import { useDocumentTitle } from "@/hooks/use-document-title";
+
 function LocationDetailPage() {
   const { locationId } = Route.useParams();
   const query = useQuery({
     queryKey: queryKeys.entity("location", locationId),
     queryFn: () => getEntity("location", locationId),
   });
+  useDocumentTitle(query.data?.name);
   const residentIds =
     query.data?.residents
       .map(idFromApiUrl)

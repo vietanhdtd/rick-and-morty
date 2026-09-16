@@ -28,7 +28,10 @@ const SUGGESTIONS = [
   "Birdperson",
 ];
 
+import { useDocumentTitle } from "@/hooks/use-document-title";
+
 function CharactersPage() {
+  useDocumentTitle("Characters");
   const search = Route.useSearch();
   const navigate = Route.useNavigate();
   const [input, setInput] = useState(search.q);

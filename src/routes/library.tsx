@@ -8,10 +8,12 @@ import { useShallow } from 'zustand/shallow'
 import { CharacterCard } from '@/components/character-card'
 import { CollectionDialog, RenameCollectionDialog } from '@/components/collection-dialog'
 import { useLibraryStore } from '@/store/library'
+import { useDocumentTitle } from '@/hooks/use-document-title'
 
 const librarySearchSchema = z.object({ list: z.string().catch('all') })
 
 function LibraryPage() {
+  useDocumentTitle("Library")
   const { list } = Route.useSearch()
   const navigate = Route.useNavigate()
   const reducedMotion = useReducedMotion()

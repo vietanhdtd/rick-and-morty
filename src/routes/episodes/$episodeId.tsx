@@ -11,12 +11,17 @@ import { CharacterCard } from "@/components/character-card";
 import { QueryState } from "@/components/query-state";
 import { RosterReadout } from "@/components/roster-readout";
 
+import { useDocumentTitle } from "@/hooks/use-document-title";
+
 function EpisodeDetailPage() {
   const { episodeId } = Route.useParams();
+  
   const query = useQuery({
     queryKey: queryKeys.entity("episode", episodeId),
     queryFn: () => getEntity("episode", episodeId),
   });
+  
+  useDocumentTitle(query.data?.name);
   const characterIds =
     query.data?.characters
       .map(idFromApiUrl)

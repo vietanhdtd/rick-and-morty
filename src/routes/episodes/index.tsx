@@ -5,7 +5,10 @@ import { useState } from "react";
 import { getPage, queryKeys } from "@/api/rick-and-morty";
 import { QueryState } from "@/components/query-state";
 
+import { useDocumentTitle } from "@/hooks/use-document-title";
+
 function EpisodesPage() {
+  useDocumentTitle("Episodes");
   const [page, setPage] = useState(1);
   const query = useQuery({
     queryKey: queryKeys.page("episode", { page }),

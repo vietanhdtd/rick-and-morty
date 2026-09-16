@@ -1,41 +1,43 @@
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-import { RefreshCw, Sparkles } from "lucide-react";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { getRandomSignal, queryKeys } from "@/api/rick-and-morty";
-import { CharacterCard } from "@/components/character-card";
-import { EpisodeSignal, LocationSignal } from "@/components/entity-hero";
-import { QueryState } from "@/components/query-state";
-import { useHomeStore } from "@/store/home";
+import { useQuery } from '@tanstack/react-query'
+import { createFileRoute } from '@tanstack/react-router'
+import { Sparkles } from 'lucide-react'
+import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
+import { getRandomSignal, queryKeys } from '@/api/rick-and-morty'
+import { CharacterCard } from '@/components/character-card'
+import { EpisodeSignal, LocationSignal } from '@/components/entity-hero'
+import { QueryState } from '@/components/query-state'
+import { useDocumentTitle } from '@/hooks/use-document-title'
+import { useHomeStore } from '@/store/home'
 
 function HomePage() {
-  const characterRefresh = useHomeStore((state) => state.characterRefresh);
-  const refreshCharacter = useHomeStore((state) => state.refreshCharacter);
-  
-  const reducedMotion = useReducedMotion();
+  useDocumentTitle('Discover')
+  const characterRefresh = useHomeStore((state) => state.characterRefresh)
+  const refreshCharacter = useHomeStore((state) => state.refreshCharacter)
+
+  const reducedMotion = useReducedMotion()
   const character = useQuery({
-    queryKey: queryKeys.signal("character", characterRefresh),
-    queryFn: () => getRandomSignal("character"),
+    queryKey: queryKeys.signal('character', characterRefresh),
+    queryFn: () => getRandomSignal('character'),
     placeholderData: (previous) => previous,
-  });
+  })
   const location = useQuery({
-    queryKey: queryKeys.signal("location", 0),
-    queryFn: () => getRandomSignal("location"),
-  });
+    queryKey: queryKeys.signal('location', 0),
+    queryFn: () => getRandomSignal('location'),
+  })
   const episode = useQuery({
-    queryKey: queryKeys.signal("episode", 0),
-    queryFn: () => getRandomSignal("episode"),
-  });
+    queryKey: queryKeys.signal('episode', 0),
+    queryFn: () => getRandomSignal('episode'),
+  })
   const suggestions = useQuery({
-    queryKey: ["suggestions", "home"],
+    queryKey: ['suggestions', 'home'],
     queryFn: () =>
       Promise.all([
-        getRandomSignal("character"),
-        getRandomSignal("character"),
-        getRandomSignal("character"),
+        getRandomSignal('character'),
+        getRandomSignal('character'),
+        getRandomSignal('character'),
       ]),
-  });
-  const supportingLoading = location.isPending || episode.isPending;
+  })
+  const supportingLoading = location.isPending || episode.isPending
 
   return (
     <>
@@ -50,7 +52,7 @@ function HomePage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.42, ease: [0.16, 1, 0.3, 1] }}
         >
-         <div className="inline-flex w-fit items-center gap-2 leading-[.8] tracking-[-0.06em] text-content uppercase mb-5">
+          <div className="inline-flex w-fit items-center gap-2 leading-[.8] tracking-[-0.06em] text-content uppercase mb-5">
             <span className="grid size-8 place-items-center rounded-md bg-signal text-signal-ink">
               <Sparkles size={16} aria-hidden="true" />
             </span>
@@ -63,8 +65,8 @@ function HomePage() {
             Meet someone <em className="text-signal">unexpected.</em>
           </h1>
           <p className="mb-6 max-w-[47ch] text-[0.875rem] text-content-secondary">
-            Start with one random character, then follow their locations and
-            episode appearances through the universe.
+            Start with one random character, then follow their locations and episode appearances
+            through the universe.
           </p>
           <motion.button
             className="inline-flex min-h-11 min-w-[min(100%,18rem)] items-center justify-center gap-2 rounded-md border border-signal bg-signal px-4 py-2.5 text-[0.8125rem] font-semibold whitespace-nowrap text-signal-ink transition-[transform,background-color,border-color] duration-150 hover:scale-[1.015] hover:border-content hover:bg-content active:scale-[0.97] disabled:scale-100"
@@ -75,14 +77,7 @@ function HomePage() {
             whileTap={reducedMotion ? undefined : { scale: 0.97 }}
             transition={{ duration: 0.12 }}
           >
-            <RefreshCw
-              size={17}
-              aria-hidden="true"
-              className={character.isFetching ? "animate-spin" : ""}
-            />
-            {character.isFetching
-              ? "Finding someone…"
-              : "Show another character"}
+            {character.isFetching ? 'Finding someone…' : 'Meet someone else'}
             <Sparkles size={15} aria-hidden="true" />
           </motion.button>
         </motion.div>
@@ -99,17 +94,9 @@ function HomePage() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={character.data.id}
-                initial={
-                  reducedMotion
-                    ? { opacity: 0 }
-                    : { opacity: 0, x: 20, scale: 0.985 }
-                }
+                initial={reducedMotion ? { opacity: 0 } : { opacity: 0, x: 20, scale: 0.985 }}
                 animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={
-                  reducedMotion
-                    ? { opacity: 0 }
-                    : { opacity: 0, x: -14, scale: 0.985 }
-                }
+                exit={reducedMotion ? { opacity: 0 } : { opacity: 0, x: -14, scale: 0.985 }}
                 transition={{
                   duration: reducedMotion ? 0.12 : 0.24,
                   ease: [0.16, 1, 0.3, 1],
@@ -122,10 +109,7 @@ function HomePage() {
         </div>
       </section>
 
-      <section
-        className="px-4 pt-12 sm:px-8 lg:px-16"
-        aria-labelledby="signals-heading"
-      >
+      <section className="px-4 pt-12 sm:px-8 lg:px-16" aria-labelledby="signals-heading">
         <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
@@ -143,7 +127,7 @@ function HomePage() {
             role="status"
             aria-live="polite"
           >
-            {supportingLoading ? "Loading" : "Ready"}
+            {supportingLoading ? 'Loading' : 'Ready'}
           </span>
         </div>
         {supportingLoading ? (
@@ -164,10 +148,7 @@ function HomePage() {
         )}
       </section>
 
-      <section
-        className="px-4 pt-12 sm:px-8 lg:px-16"
-        aria-labelledby="suggestions-heading"
-      >
+      <section className="px-4 pt-12 sm:px-8 lg:px-16" aria-labelledby="suggestions-heading">
         <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
             <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
@@ -188,17 +169,13 @@ function HomePage() {
         ) : (
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {suggestions.data?.map((entry, index) => (
-              <CharacterCard
-                key={`${entry.id}-${index}`}
-                character={entry}
-                index={index}
-              />
+              <CharacterCard key={`${entry.id}-${index}`} character={entry} index={index} />
             ))}
           </div>
         )}
       </section>
     </>
-  );
+  )
 }
 
-export const Route = createFileRoute("/")({ component: HomePage });
+export const Route = createFileRoute('/')({ component: HomePage })

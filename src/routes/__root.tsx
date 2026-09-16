@@ -167,8 +167,19 @@ function RootLayout() {
         </main>
       </LayoutGroup>
       <footer className="mt-16 flex gap-2 border-t border-border px-4 py-8 text-[0.6875rem] text-content-muted sm:px-8 lg:px-12">
-        <Archive size={14} aria-hidden="true" /> Explore the characters, places, and episodes of
-        Rick and Morty. Data: Rick and Morty API.
+        <Archive className="shrink-0" size={14} aria-hidden="true" />
+        <p>
+          Explore the characters, places, and episodes of Rick and Morty. Data provided by{" "}
+          <a
+            href="https://rickandmortyapi.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-content transition-colors hover:text-signal hover:underline"
+          >
+            The Rick and Morty API
+          </a>
+          .
+        </p>
       </footer>
     </div>
   )

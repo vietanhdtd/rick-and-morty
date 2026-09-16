@@ -19,14 +19,19 @@ import { LibrarySaveButton } from "@/components/library-save-button";
 import { QueryState } from "@/components/query-state";
 import { StatusSignal } from "@/components/status-signal";
 
+import { useDocumentTitle } from "@/hooks/use-document-title";
+
 function CharacterDetailPage() {
   const { characterId } = Route.useParams();
   const router = useRouter();
   const canGoBack = useCanGoBack();
+  
   const query = useQuery({
     queryKey: queryKeys.entity("character", characterId),
     queryFn: () => getEntity("character", characterId),
   });
+  
+  useDocumentTitle(query.data?.name);
 
   const episodeIds =
     query.data?.episode

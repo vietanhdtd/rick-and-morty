@@ -5,7 +5,10 @@ import { useState } from "react";
 import { getPage, queryKeys } from "@/api/rick-and-morty";
 import { QueryState } from "@/components/query-state";
 
+import { useDocumentTitle } from "@/hooks/use-document-title";
+
 function LocationsPage() {
+  useDocumentTitle("Places");
   const [page, setPage] = useState(1);
   const query = useQuery({
     queryKey: queryKeys.page("location", { page }),
