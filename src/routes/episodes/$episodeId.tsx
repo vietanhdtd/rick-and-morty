@@ -15,12 +15,12 @@ import { useDocumentTitle } from "@/hooks/use-document-title";
 
 function EpisodeDetailPage() {
   const { episodeId } = Route.useParams();
-  
+
   const query = useQuery({
     queryKey: queryKeys.entity("episode", episodeId),
     queryFn: () => getEntity("episode", episodeId),
   });
-  
+
   useDocumentTitle(query.data?.name);
   const characterIds =
     query.data?.characters
@@ -60,20 +60,17 @@ function EpisodeDetailPage() {
       >
         <ArrowLeft size={16} aria-hidden="true" /> Back to episodes
       </Link>
-      <div className="mb-5 flex min-h-56 items-end gap-5 border border-border bg-surface-raised p-5 text-content-secondary sm:p-10">
+      <div className="mb-5 flex items-end gap-5 border border-border bg-surface-raised p-5 text-content-secondary sm:p-8">
         <div className="mb-auto text-signal">
-          <Clapperboard className="size-12" aria-hidden="true" />
-        </div>
-        <div>
-          <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
-            Episode / {episode.episode}
-          </p>
-          <h1 className="my-3 text-[clamp(3rem,6vw,5.5rem)] dark:text-content-on-dark">
+          <div className="flex items-end gap-2">
+            <Clapperboard className="size-8" aria-hidden="true" />
+            <p className="flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
+              Episode / {episode.episode}
+            </p>
+          </div>
+          <h1 className="my-3 text-[clamp(3rem,3.5vw,5.5rem)] dark:text-content-on-dark">
             {episode.name}
           </h1>
-          <p className="text-content-muted dark:text-content-on-dark-muted">
-            Aired {episode.air_date}
-          </p>
         </div>
       </div>
       <section
@@ -105,18 +102,12 @@ function EpisodeDetailPage() {
           </strong>
         </article>
       </section>
-      <section className="px-0 pt-12" aria-labelledby="cast-heading">
+      <section className="px-0 pt-6" aria-labelledby="cast-heading">
         <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
           <div>
-            <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
+            <p className="mb-1 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
               <Users size={14} aria-hidden="true" /> Cast
             </p>
-            <h2
-              className="mb-0 max-w-[20ch] text-[clamp(1.75rem,4vw,3.25rem)]"
-              id="cast-heading"
-            >
-              Characters in this episode.
-            </h2>
           </div>
         </div>
         {cast.isPending ? (

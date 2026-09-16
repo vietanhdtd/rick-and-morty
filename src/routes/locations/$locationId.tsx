@@ -58,21 +58,16 @@ function LocationDetailPage() {
       >
         <ArrowLeft size={16} aria-hidden="true" /> Back to places
       </Link>
-      <div className="mb-5 flex min-h-56 items-end gap-5 border border-border bg-surface-raised p-5 text-content-secondary sm:p-10">
-        <div className="mb-auto text-signal">
-          <MapPinned className="size-12" aria-hidden="true" />
-        </div>
-        <div>
-          <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
+      <div className="mb-5 flex flex-col border border-border bg-surface-raised p-5 text-content-secondary sm:p-8">
+        <div className="mb-auto text-signal flex items-end gap-2">
+          <MapPinned className="size-8" aria-hidden="true" />
+          <p className=" flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
             Place / #{String(location.id).padStart(3, "0")}
           </p>
-          <h1 className="my-3 text-[clamp(3rem,6vw,5.5rem)] dark:text-content-on-dark">
-            {location.name}
-          </h1>
-          <p className="text-content-muted dark:text-content-on-dark-muted">
-            {location.type || "Unknown place"} in {location.dimension}
-          </p>
         </div>
+        <h1 className="my-3 text-[clamp(3rem,3.5vw,5.5rem)] dark:text-content-on-dark">
+          {location.name}
+        </h1>
       </div>
       <section
         className="mt-5 grid grid-cols-1 border-t border-l border-border sm:grid-cols-2 lg:grid-cols-3"

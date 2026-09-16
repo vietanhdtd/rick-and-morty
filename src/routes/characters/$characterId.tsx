@@ -99,7 +99,7 @@ function CharacterDetailPage() {
               Character
             </p>
           </div>
-          <h1 className="my-3 text-[clamp(3rem,6vw,5.5rem)]">
+          <h1 className="my-3 text-[clamp(3rem,3.5vw,5.5rem)]">
             {character.name}
           </h1>
           <StatusSignal status={character.status} />
