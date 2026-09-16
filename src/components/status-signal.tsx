@@ -21,7 +21,7 @@ export function StatusSignal({ status }: Pick<Character, "status">) {
       className={`inline-flex items-center justify-center gap-1.5 border px-2.5 py-1 text-[0.625rem] font-semibold leading-none tracking-[0.04em] uppercase ${containerStyle}`}
     >
       <i aria-hidden="true" className={`size-1.5 rounded-full ${dotStyle}`} />
-      <span className="translate-y-[1.5px]">{status}</span>
+      <span className="translate-y-px">{status}</span>
     </span>
   );
 }
