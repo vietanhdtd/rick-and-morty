@@ -18,6 +18,7 @@
   --color-border: var(--color-rule);
   --color-border-strong: var(--color-rule-strong);
   --color-alert: var(--color-danger);
+  --color-alert-soft: var(--color-danger-soft);
   --color-status-alive: var(--color-alive);
   --color-status-dead: var(--color-dead);
   --color-status-unknown: var(--color-unknown);

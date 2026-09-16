@@ -1,50 +1,67 @@
-import { Dialog } from '@base-ui/react/dialog'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ArchiveRestore, ChevronRight, FolderOpen, Heart, Orbit, Trash2 } from 'lucide-react'
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
-import { useState } from 'react'
-import { z } from 'zod'
-import { useShallow } from 'zustand/shallow'
-import { CharacterCard } from '@/components/character-card'
-import { CollectionDialog, RenameCollectionDialog } from '@/components/collection-dialog'
-import { useLibraryStore } from '@/store/library'
-import { useDocumentTitle } from '@/hooks/use-document-title'
+import { Dialog } from "@base-ui/react/dialog";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  ArchiveRestore,
+  ChevronRight,
+  FolderOpen,
+  Heart,
+  Orbit,
+  Trash2,
+} from "lucide-react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { useState } from "react";
+import { z } from "zod";
+import { useShallow } from "zustand/shallow";
+import { CharacterCard } from "@/components/character-card";
+import {
+  CollectionDialog,
+  RenameCollectionDialog,
+} from "@/components/collection-dialog";
+import { useDocumentTitle } from "@/hooks/use-document-title";
+import { useLibraryStore } from "@/store/library";
 
-const librarySearchSchema = z.object({ list: z.string().catch('all') })
+const librarySearchSchema = z.object({ list: z.string().catch("all") });
 
 function LibraryPage() {
-  useDocumentTitle("Library")
-  const { list } = Route.useSearch()
-  const navigate = Route.useNavigate()
-  const reducedMotion = useReducedMotion()
+  useDocumentTitle("Library");
+  const { list } = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const reducedMotion = useReducedMotion();
   const savedCharacters = useLibraryStore(
     useShallow((state) => Object.values(state.savedCharacters)),
-  )
-  const savedCharactersById = useLibraryStore((state) => state.savedCharacters)
-  const collections = useLibraryStore((state) => state.collections)
-  const deleteCollection = useLibraryStore((state) => state.deleteCollection)
-  const [query, setQuery] = useState('')
-  const [sort, setSort] = useState<'name' | 'appearances'>('name')
-  const selectedCollection = collections.find((collection) => collection.id === list)
+  );
+  const savedCharactersById = useLibraryStore((state) => state.savedCharacters);
+  const collections = useLibraryStore((state) => state.collections);
+  const deleteCollection = useLibraryStore((state) => state.deleteCollection);
+  const [query, setQuery] = useState("");
+  const [sort, setSort] = useState<"name" | "appearances">("name");
+  const selectedCollection = collections.find(
+    (collection) => collection.id === list,
+  );
   const activeCharacters = selectedCollection
     ? selectedCollection.characterIds
         .map((id) => savedCharactersById[id])
-        .filter((character): character is NonNullable<typeof character> => Boolean(character))
-    : savedCharacters
+        .filter((character): character is NonNullable<typeof character> =>
+          Boolean(character),
+        )
+    : savedCharacters;
   const visibleCharacters = [...activeCharacters]
-    .filter((character) => character.name.toLowerCase().includes(query.trim().toLowerCase()))
-    .sort((first, second) =>
-      sort === 'appearances'
-        ? second.episode.length - first.episode.length || first.name.localeCompare(second.name)
-        : first.name.localeCompare(second.name),
+    .filter((character) =>
+      character.name.toLowerCase().includes(query.trim().toLowerCase()),
     )
+    .sort((first, second) =>
+      sort === "appearances"
+        ? second.episode.length - first.episode.length ||
+          first.name.localeCompare(second.name)
+        : first.name.localeCompare(second.name),
+    );
 
-  function selectList(id = 'all') {
-    void navigate({ search: { list: id } })
+  function selectList(id = "all") {
+    void navigate({ search: { list: id } });
   }
   function handleDelete(id: string) {
-    deleteCollection(id)
-    if (list === id) selectList()
+    deleteCollection(id);
+    if (list === id) selectList();
   }
 
   return (
@@ -54,16 +71,25 @@ function LibraryPage() {
           <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
             Personal character index
           </p>
-          <h1 className="my-2 text-[clamp(2.4rem,5vw,4.5rem)] leading-[.92]">Library</h1>
+          <h1 className="my-2 text-[clamp(2.4rem,4vw,4.5rem)] leading-[.92]">
+            Library
+          </h1>
           <p className="max-w-[54ch] text-[0.8125rem] text-content-secondary">
-            Favorite characters, then build small lists for the threads you want to follow.
+            Favorite characters, then build small lists for the threads you want
+            to follow.
           </p>
         </div>
-        <CollectionDialog onCreated={(collection) => selectList(collection.id)} />
+        <CollectionDialog
+          onCreated={(collection) => selectList(collection.id)}
+        />
       </header>
-      <section className="my-4 flex flex-wrap gap-2" aria-label="Library totals">
+      <section
+        className="my-4 flex flex-wrap gap-2"
+        aria-label="Library totals"
+      >
         <span className="flex items-center gap-2 border border-border p-3 text-[0.6875rem] text-content-muted">
-          <Heart size={15} aria-hidden="true" /> {savedCharacters.length} favorites
+          <Heart size={15} aria-hidden="true" /> {savedCharacters.length}{" "}
+          favorites
         </span>
         <span className="flex items-center gap-2 border border-border p-3 text-[0.6875rem] text-content-muted">
           <Orbit size={15} aria-hidden="true" /> {collections.length} lists
@@ -79,15 +105,17 @@ function LibraryPage() {
             Browse
           </p>
           <button
-            className={`flex min-h-10 w-full items-center justify-between gap-2 border px-3 py-2 text-left text-[0.75rem] ${!selectedCollection ? 'border-signal bg-signal-soft text-signal' : 'border-transparent bg-transparent text-content-secondary'}`}
+            className={`flex min-h-10 w-full items-center justify-between gap-2 border px-3 py-2 text-left text-[0.75rem] ${!selectedCollection ? "border-signal bg-signal-soft text-signal" : "border-transparent bg-transparent text-content-secondary"}`}
             type="button"
-            aria-current={!selectedCollection ? 'page' : undefined}
+            aria-current={!selectedCollection ? "page" : undefined}
             onClick={() => selectList()}
           >
             <span className="inline-flex min-w-0 items-center gap-2 overflow-hidden text-ellipsis whitespace-nowrap">
               <ArchiveRestore size={15} aria-hidden="true" /> All favorites
             </span>
-            <small className="text-[0.625rem] text-content-muted">{savedCharacters.length}</small>
+            <small className="text-[0.625rem] text-content-muted">
+              {savedCharacters.length}
+            </small>
           </button>
           <div className="mt-4 border-t border-border pt-2">
             <p className="mx-3 my-2 text-[0.625rem] tracking-[.08em] text-content-muted uppercase">
@@ -96,9 +124,11 @@ function LibraryPage() {
             {collections.map((collection) => (
               <button
                 key={collection.id}
-                className={`flex min-h-10 w-full items-center justify-between gap-2 border px-3 py-2 text-left text-[0.75rem] ${selectedCollection?.id === collection.id ? 'border-signal bg-signal-soft text-signal' : 'border-transparent bg-transparent text-content-secondary'}`}
+                className={`flex min-h-10 w-full items-center justify-between gap-2 border px-3 py-2 text-left text-[0.75rem] ${selectedCollection?.id === collection.id ? "border-signal bg-signal-soft text-signal" : "border-transparent bg-transparent text-content-secondary"}`}
                 type="button"
-                aria-current={selectedCollection?.id === collection.id ? 'page' : undefined}
+                aria-current={
+                  selectedCollection?.id === collection.id ? "page" : undefined
+                }
                 aria-label={`Select list: ${collection.name}`}
                 onClick={() => selectList(collection.id)}
               >
@@ -123,23 +153,31 @@ function LibraryPage() {
         >
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={selectedCollection?.id ?? 'all'}
-              initial={reducedMotion ? false : { opacity: 0, transform: 'translateY(6px)' }}
-              animate={{ opacity: 1, transform: 'translateY(0)' }}
-              exit={reducedMotion ? { opacity: 0 } : { opacity: 0, transform: 'translateY(-4px)' }}
+              key={selectedCollection?.id ?? "all"}
+              initial={
+                reducedMotion
+                  ? false
+                  : { opacity: 0, transform: "translateY(6px)" }
+              }
+              animate={{ opacity: 1, transform: "translateY(0)" }}
+              exit={
+                reducedMotion
+                  ? { opacity: 0 }
+                  : { opacity: 0, transform: "translateY(-4px)" }
+              }
               transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
             >
               <header className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-end">
                 <div>
                   <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
-                    {selectedCollection ? 'List' : 'All favorites'}
+                    {selectedCollection ? "List" : "All favorites"}
                   </p>
                   <h2 className="my-2 text-[clamp(1.9rem,3.2vw,3.2rem)] leading-[.95]">
-                    {selectedCollection?.name ?? 'Every favorite'}
+                    {selectedCollection?.name ?? "Every favorite"}
                   </h2>
                   <p className="text-[0.6875rem] text-content-muted">
-                    {activeCharacters.length}{' '}
-                    {activeCharacters.length === 1 ? 'character' : 'characters'}
+                    {activeCharacters.length}{" "}
+                    {activeCharacters.length === 1 ? "character" : "characters"}
                   </p>
                 </div>
                 {selectedCollection ? (
@@ -162,7 +200,8 @@ function LibraryPage() {
                             Delete “{selectedCollection.name}”?
                           </Dialog.Title>
                           <Dialog.Description className="text-content-muted">
-                            Its characters remain safely favorited in your Library.
+                            Its characters remain safely favorited in your
+                            Library.
                           </Dialog.Description>
                           <div className="flex justify-end gap-2">
                             <Dialog.Close className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-border-strong bg-transparent px-4 py-2.5 text-[0.8125rem] font-semibold text-content-secondary">
@@ -171,7 +210,9 @@ function LibraryPage() {
                             <button
                               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-alert bg-alert px-4 py-2.5 text-[0.8125rem] font-semibold text-white"
                               type="button"
-                              onClick={() => handleDelete(selectedCollection.id)}
+                              onClick={() =>
+                                handleDelete(selectedCollection.id)
+                              }
                             >
                               Delete list
                             </button>
@@ -203,7 +244,9 @@ function LibraryPage() {
                     </span>
                     <select
                       value={sort}
-                      onChange={(event) => setSort(event.target.value as 'name' | 'appearances')}
+                      onChange={(event) =>
+                        setSort(event.target.value as "name" | "appearances")
+                      }
                       aria-label="Sort characters"
                       className="min-h-10 border border-border-strong bg-surface-raised p-2 text-[0.75rem] text-content"
                     >
@@ -246,19 +289,23 @@ function LibraryPage() {
                     <Heart aria-hidden="true" />
                   )}
                   <p>
-                    {selectedCollection ? 'This list is waiting for a cast.' : 'No favorites yet.'}
+                    {selectedCollection
+                      ? "This list is waiting for a cast."
+                      : "No favorites yet."}
                   </p>
                   <span>
                     {selectedCollection
-                      ? 'Open a character and use Add to list to place them here.'
-                      : 'Explore the character directory and build your first collection.'}
+                      ? "Open a character and use Add to list to place them here."
+                      : "Explore the character directory and build your first collection."}
                   </span>
                   <Link
                     className="mt-3 inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-signal bg-signal px-4 py-2.5 text-[0.8125rem] font-semibold whitespace-nowrap text-signal-ink"
                     to="/characters"
-                    search={{ q: '', status: 'all' }}
+                    search={{ q: "", status: "all" }}
                   >
-                    {selectedCollection ? 'Add characters' : 'Browse characters'}{' '}
+                    {selectedCollection
+                      ? "Add characters"
+                      : "Browse characters"}{" "}
                     <ChevronRight size={15} aria-hidden="true" />
                   </Link>
                 </div>
@@ -268,10 +315,10 @@ function LibraryPage() {
         </section>
       </div>
     </section>
-  )
+  );
 }
 
-export const Route = createFileRoute('/library')({
+export const Route = createFileRoute("/library")({
   component: LibraryPage,
   validateSearch: librarySearchSchema,
-})
+});

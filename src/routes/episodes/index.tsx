@@ -23,7 +23,7 @@ function EpisodesPage() {
         <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
           Episodes / {query.data.info.count} total
         </p>
-        <h1 className="mb-4 text-[clamp(2.6rem,6vw,5.7rem)]">
+        <h1 className="mb-4 text-[clamp(2.6rem,4vw,5.7rem)]">
           Every episode, in one place.
         </h1>
         <p className="max-w-[52ch] text-content-secondary">

@@ -78,9 +78,9 @@ function CharactersPage() {
         <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
           Characters / {characters.length || "—"} shown
         </p>
-        <h1 className="mb-4 text-[clamp(2.6rem,6vw,5.7rem)]">
+        <h2 className="mb-4 text-[clamp(2.6rem,4vw,5.7rem)]">
           Find a character.
-        </h1>
+        </h2>
         <p className="max-w-[52ch] text-content-secondary">
           Search people, creatures, and other oddities from across the series.
         </p>

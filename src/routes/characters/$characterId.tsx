@@ -25,12 +25,12 @@ function CharacterDetailPage() {
   const { characterId } = Route.useParams();
   const router = useRouter();
   const canGoBack = useCanGoBack();
-  
+
   const query = useQuery({
     queryKey: queryKeys.entity("character", characterId),
     queryFn: () => getEntity("character", characterId),
   });
-  
+
   useDocumentTitle(query.data?.name);
 
   const episodeIds =

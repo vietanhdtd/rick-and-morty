@@ -25,7 +25,7 @@ function LocationsPage() {
         <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
           Places / {query.data.info.count} total
         </p>
-        <h1 className="mb-4 text-[clamp(2.6rem,6vw,5.7rem)]">
+        <h1 className="mb-4 text-[clamp(2.6rem,4vw,5.7rem)]">
           Explore the places.
         </h1>
         <p className="max-w-[52ch] text-content-secondary">
@@ -47,29 +47,29 @@ function LocationsPage() {
 
               style={{ "--i": index } as React.CSSProperties}
             > */}
-              <div className="flex items-center gap-2">
-                <div>
-                  <MapPin aria-hidden="true" />
-                </div>
-                <span className="flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] uppercase">
-                  #{String(location.id).padStart(3, "0")} /{" "}
-                  {location.type || "Unknown"}
-                </span>
+            <div className="flex items-center gap-2">
+              <div>
+                <MapPin aria-hidden="true" />
               </div>
-              <h2 className="mt-4 mb-2 text-2xl text-signal">{location.name}</h2>
-              <p className="text-[0.75rem] text-content-muted">
-                {location.dimension}
-              </p>
-              <footer className="mt-auto flex items-center justify-between pt-3 text-[0.625rem] text-content-muted">
-                <span>{location.residents.length} residents</span>
-                <Link
-                  to="/locations/$locationId"
-                  params={{ locationId: String(location.id) }}
-                  aria-label={`View ${location.name}`}
-                >
-                  <ArrowRight size={18} aria-hidden="true" />
-                </Link>
-              </footer>
+              <span className="flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] uppercase">
+                #{String(location.id).padStart(3, "0")} /{" "}
+                {location.type || "Unknown"}
+              </span>
+            </div>
+            <h2 className="mt-4 mb-2 text-2xl text-signal">{location.name}</h2>
+            <p className="text-[0.75rem] text-content-muted">
+              {location.dimension}
+            </p>
+            <footer className="mt-auto flex items-center justify-between pt-3 text-[0.625rem] text-content-muted">
+              <span>{location.residents.length} residents</span>
+              <Link
+                to="/locations/$locationId"
+                params={{ locationId: String(location.id) }}
+                aria-label={`View ${location.name}`}
+              >
+                <ArrowRight size={18} aria-hidden="true" />
+              </Link>
+            </footer>
             {/* </article> */}
           </Link>
         ))}
