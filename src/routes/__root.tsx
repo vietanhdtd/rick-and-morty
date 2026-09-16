@@ -1,22 +1,9 @@
-import {
-  createRootRoute,
-  Link,
-  Outlet,
-  useLocation,
-} from "@tanstack/react-router";
-import {
-  Archive,
-  BookMarked,
-  Map as MapIcon,
-  Radio,
-  Search,
-  Tv,
-} from "lucide-react";
+import { createRootRoute, Outlet, useLocation } from "@tanstack/react-router";
+import { Archive } from "lucide-react";
 import { LayoutGroup, motion, useReducedMotion } from "motion/react";
 import { useEffect } from "react";
 import { FloatingNavbar } from "@/components/floating-navbar";
 import { NotFound } from "@/components/not-found";
-import { ThemeToggle } from "@/components/theme-toggle";
 
 function RootLayout() {
   const pathname = useLocation({ select: (location) => location.pathname });

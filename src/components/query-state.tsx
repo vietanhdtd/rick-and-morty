@@ -37,9 +37,9 @@ export function QueryState({
       </div>
     );
   return (
-    <div className="min-h-[calc(100vh-200px)] flex justify-center items-center">
+    <div className="flex min-h-[calc(100vh-200px)] items-start px-5 pt-8 pb-28 sm:items-center sm:p-12">
       <div
-        className="grid min-h-44 grid-cols-[auto_minmax(0,1fr)] content-center gap-x-4 gap-y-3 border border-alert border-l-[3px] bg-alert-soft p-5 text-left text-content-secondary sm:p-6"
+        className="grid min-h-56 w-full grid-cols-[auto_minmax(0,1fr)] content-center gap-x-4 gap-y-3 border border-alert border-l-[3px] bg-alert-soft p-5 text-left text-content-secondary sm:p-8"
         role="alert"
       >
         <div
