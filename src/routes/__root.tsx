@@ -75,7 +75,7 @@ function RootLayout() {
       >
         <Link
           to="/"
-          className={`relative inline-flex min-h-13 items-center gap-2 rounded-[0.8125rem] px-4 text-[0.8125rem] whitespace-nowrap text-content-muted transition-[color,transform] duration-150 hover:scale-[1.02] hover:text-content active:scale-95 max-sm:flex-1 max-sm:justify-center max-sm:px-2 ${isActive('/') ? 'text-content' : ''}`}
+          className={`relative inline-flex min-h-13 items-center gap-2 rounded-[0.8125rem] px-4 text-[0.8125rem] whitespace-nowrap text-content-muted transition-[color,transform] duration-150 hover:scale-[1.02] hover:text-content active:scale-95 max-sm:flex-1 max-sm:justify-center max-sm:px-2 ${isActive('/') ? 'text-signal' : ''}`}
           aria-current={isActive('/') ? 'page' : undefined}
         >
           {isActive('/') && (
