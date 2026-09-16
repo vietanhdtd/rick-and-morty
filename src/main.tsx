@@ -4,8 +4,7 @@ import { domAnimation, LazyMotion, MotionConfig } from "motion/react";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { router } from "@/router";
-import "@/panda.css";
-import "@/styles.css";
+import "@/styles/index.css";
 
 const queryClient = new QueryClient({
   defaultOptions: {

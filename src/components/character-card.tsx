@@ -1,31 +1,29 @@
-import { Link } from "@tanstack/react-router";
-import { ListMinus, MapPin, Radio } from "lucide-react";
-import { motion, useReducedMotion } from "motion/react";
-import { LibrarySaveButton } from "@/components/library-save-button";
-import { StatusSignal } from "@/components/status-signal";
-import { useLibraryStore } from "@/store/library";
-import type { Character } from "@/types/rick-and-morty";
+import { Link } from '@tanstack/react-router'
+import { ListMinus, MapPin, Radio } from 'lucide-react'
+import { motion, useReducedMotion } from 'motion/react'
+import { LibrarySaveButton } from '@/components/library-save-button'
+import { StatusSignal } from '@/components/status-signal'
+import { useLibraryStore } from '@/store/library'
+import type { Character } from '@/types/rick-and-morty'
 
 export function CharacterCard({
   character,
   index = 0,
   collectionId,
 }: {
-  character: Character;
-  index?: number;
-  collectionId?: string;
+  character: Character
+  index?: number
+  collectionId?: string
 }) {
-  const reducedMotion = useReducedMotion();
+  const reducedMotion = useReducedMotion()
   const removeCharacterFromCollection = useLibraryStore(
     (state) => state.removeCharacterFromCollection,
-  );
+  )
 
   return (
     <motion.article
-      className="character-card"
-      initial={
-        reducedMotion ? { opacity: 0 } : { opacity: 0, y: 10, scale: 0.98 }
-      }
+      className="min-w-0 overflow-hidden border border-border bg-surface"
+      initial={reducedMotion ? { opacity: 0 } : { opacity: 0, y: 10, scale: 0.98 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{
         delay: reducedMotion ? 0 : Math.min(index * 0.045, 0.36),
@@ -37,57 +35,58 @@ export function CharacterCard({
       <Link
         to="/characters/$characterId"
         params={{ characterId: String(character.id) }}
-        className="character-card__image-link"
+        className="relative block h-64 overflow-hidden"
         aria-label={`View ${character.name}`}
       >
         <motion.span
-          className="character-card__avatar"
+          className="size-full"
           layoutId={`character-avatar-${character.id}`}
-          transition={{ type: "spring", stiffness: 330, damping: 32 }}
+          transition={{ type: 'spring', stiffness: 330, damping: 32 }}
         >
           <img
             src={character.image}
             alt=""
-            className="character-card__image"
+            className="size-full object-cover transition-[filter,transform] duration-200 hover:scale-[1.025] hover:saturate-[1.05]"
             width={300}
             height={300}
             loading="lazy"
           />
         </motion.span>
-        <span className="character-card__index">
-          #{String(character.id).padStart(3, "0")}
+        <span className="absolute top-3 left-3 bg-canvas-dark px-2 py-1 text-[0.625rem] text-content-on-dark">
+          #{String(character.id).padStart(3, '0')}
         </span>
       </Link>
-      <div className="character-card__body">
-        <div className="character-card__topline">
+      <div className="p-4">
+        <div className="flex items-center justify-between text-[0.625rem] tracking-[0.04em] text-content-muted uppercase">
           <StatusSignal status={character.status} />
           <span>{character.species}</span>
         </div>
-        <Link
-          to="/characters/$characterId"
-          params={{ characterId: String(character.id) }}
-          className="character-card__title"
-        >
-          {character.name}
-        </Link>
-        <p>
+        <h3 className="my-3 block text-[1.35rem] leading-none tracking-[-0.04em] text-content">
+          <Link to="/characters/$characterId" params={{ characterId: String(character.id) }}>
+            {character.name}
+          </Link>
+        </h3>
+        <p className="mb-2 flex min-w-0 items-center gap-1 overflow-hidden text-[0.75rem] text-ellipsis whitespace-nowrap text-content-muted">
           <MapPin size={13} aria-hidden="true" /> {character.location.name}
         </p>
-        <p className="character-card__record">
-          <Radio size={13} aria-hidden="true" /> {character.episode.length}{" "}
-          {character.episode.length === 1 ? "episode appearance" : "episode appearances"}
+        <p className="mb-2 flex min-w-0 items-center gap-1 overflow-hidden text-[0.75rem] text-ellipsis whitespace-nowrap text-signal">
+          <Radio size={13} aria-hidden="true" /> {character.episode.length}{' '}
+          {character.episode.length === 1 ? 'episode appearance' : 'episode appearances'}
         </p>
-        <LibrarySaveButton character={character} />
-        {collectionId ? (
-          <button
-            className="character-card__remove-from-list"
-            type="button"
-            onClick={() => removeCharacterFromCollection(collectionId, character.id)}
-          >
-            <ListMinus size={14} /> Remove from this list
-          </button>
-        ) : null}
+        <div className="mt-2 flex items-center justify-between gap-2">
+          <LibrarySaveButton character={character} />
+          {collectionId ? (
+            <button
+              className="inline-flex items-center gap-1 bg-transparent p-0 text-[0.6875rem] font-semibold text-content-muted transition-[color,transform] duration-150 hover:text-alert active:scale-95"
+              type="button"
+              aria-label={`Remove ${character.name} from this list`}
+              onClick={() => removeCharacterFromCollection(collectionId, character.id)}
+            >
+              <ListMinus size={14} aria-hidden="true" /> Remove from this list
+            </button>
+          ) : null}
+        </div>
       </div>
     </motion.article>
-  );
+  )
 }

@@ -11,7 +11,7 @@ Multiverse Guide is a responsive front-end showcase for exploring the Rick and M
 | Search | The character index has debounced name search, an alive/dead/unknown filter, URL-synchronised search state, and paginated results. |
 | Favourites and groups | A character can be saved or removed from any character card. Saved characters can be assigned to or removed from named lists; both lists and favourites can be deleted. |
 | Storage | Zustand persistence stores saved-character snapshots and lists in `localStorage`, so they are restored on the next visit. Removing a favourite also removes its list references; deleting a list retains its saved characters. |
-| Hosting and code | The repository includes a GitHub Actions quality-and-deploy workflow for Cloudflare Pages. Configure the deployment values below before pushing `main`. |
+| Hosting and code | The repository includes a GitHub Actions quality-and-deploy workflow for Cloudflare Workers Static Assets. Configure the deployment values below before pushing `main`. |
 
 ## Run locally
 
@@ -45,8 +45,19 @@ bun run build
 - **Vite + React** keeps the application small and fast to start, while **TanStack Router** supplies typed, file-based routes and URL-backed character search state.
 - **TanStack Query** owns remote API state: requests, caching, pagination, loading, empty, and error states. API schemas and request functions live in `src/api`, keeping page components focused on presentation.
 - **Zustand with `persist`** owns only user-controlled local state: favourite character snapshots and named lists. This cleanly separates browser-owned state from API data.
-- Reusable visual components live in `src/components`; route files own route parameters and search validation. **Panda CSS** provides typed design tokens, **Base UI** supplies accessible dialogs and focus management, and **Motion** handles non-essential interface motion with reduced-motion alternatives.
+- Reusable visual components live in `src/components`; route files own route parameters and search validation. A dedicated **`tokens.css`** token system provides semantic design variables and light/dark theme values, **Base UI** supplies accessible dialogs and focus management, and **Motion** handles non-essential interface motion with reduced-motion alternatives.
 - The visual direction is a light, technical guide rather than a direct reproduction of the source material. It uses semantic controls, visible focus states, text-backed status indicators, responsive layouts, and restrained motion.
+
+## Accessibility
+
+The application is built with accessibility as a core consideration:
+
+- **Semantic & structural HTML**: Strict single-landmark hierarchy (`<main>`, `<nav>`, `<header>`, `<aside>`, `<section>`, `<article>`), correctly structured headings (`<h1>` through `<h3>`), and semantic controls throughout.
+- **Keyboard navigation & focus management**: Skip-to-content link moving programmatic focus to `#main-content`, visible 2px focus indicators (`:focus-visible`) with 3px offset, accessible dialogs with focus trapping and Escape-to-close (via Base UI).
+- **ARIA & accessible labelling**: Navigation links indicate active page state with `aria-current="page"`; filter buttons indicate selection state with `aria-pressed`; expand/collapse controls expose `aria-expanded` and `aria-controls`; interactive icon buttons and link targets include descriptive `aria-label`s; decorative icons are hidden from assistive tech with `aria-hidden="true"`.
+- **Live regions & feedback**: Dynamic updates (search result counts, loading states, error alerts, and favorite/list actions) use polite live regions (`aria-live="polite"`, `role="status"`, `role="alert"`).
+- **Colour independence & contrast**: Status signals pair color with explicit text labels (`Alive`, `Dead`, `unknown`); contrast ratios comply with WCAG AA in both light and dark themes.
+- **Reduced motion**: Respects `prefers-reduced-motion` across Framer Motion transitions, CSS keyframes, and Lenis smooth scrolling.
 
 ## Two-hour scope and trade-offs
 
@@ -56,11 +67,11 @@ Persistence is intentionally browser-local rather than account-based. Home-page 
 
 ## Quality and deployment
 
-The GitHub Actions workflow runs Biome linting, type checking, Bun unit tests, and a production build on pull requests and pushes to `main`. On a successful `main` build, it deploys the verified `dist/` artifact to Cloudflare Pages.
+The GitHub Actions workflow runs Biome linting, type checking, Bun unit tests, and a production build on pull requests and pushes to `main`. On a successful `main` build, it deploys the verified `dist/` artifact through a Cloudflare Worker with Static Assets.
 
 Before enabling deployment, configure these GitHub secrets:
 
 - `CLOUDFLARE_API_TOKEN`
 - `CLOUDFLARE_ACCOUNT_ID`
 
-Also set `CLOUDFLARE_PAGES_PROJECT` as a repository variable, keep Cloudflare Pages Git integration disconnected, and protect `main` with the `quality` check.
+Create the `living-archive` Worker in the Cloudflare dashboard (or let the first deployment create it), keep Cloudflare's Git integration disconnected, and protect `main` with the `quality` check. The Worker serves the Vite build from `dist/` and returns `index.html` for client-side routes.

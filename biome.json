@@ -6,14 +6,14 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": ["**", "!!**/src/routeTree.gen.ts", "!!**/src/panda.css"]
+    "includes": ["**", "!!**/src/routeTree.gen.ts", "!!worker-configuration.d.ts"]
   },
   "formatter": {
     "indentStyle": "space",
     "lineWidth": 100
   },
   "linter": {
-    "includes": ["**/*.{js,jsx,ts,tsx,mjs,cjs}"],
+    "includes": ["**/*.{js,jsx,ts,tsx,mjs,cjs}", "!!worker-configuration.d.ts"],
     "rules": {
       "preset": "recommended",
       "a11y": {

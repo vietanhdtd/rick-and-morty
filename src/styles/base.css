@@ -1,0 +1,105 @@
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    background: var(--color-paper);
+    color-scheme: light;
+  }
+
+  html.dark {
+    color-scheme: dark;
+  }
+
+  body {
+    min-width: 20rem;
+    margin: 0;
+    overflow-x: clip;
+    background: var(--color-paper);
+    color: var(--color-ink-2);
+    font-family: var(--font-body);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    -webkit-tap-highlight-color: color-mix(in oklch, var(--color-accent) 20%, transparent);
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+  }
+
+  button,
+  a {
+    touch-action: manipulation;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  button:disabled {
+    cursor: wait;
+    opacity: 0.55;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  h1,
+  h2,
+  h3 {
+    margin-top: 0;
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  p {
+    margin-top: 0;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 3px;
+  }
+}
+
+@keyframes route-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+html[data-theme-vt="active"]::view-transition-group(root) {
+  animation-duration: var(--theme-vt-duration);
+}
+
+html[data-theme-vt="active"]::view-transition-new(root) {
+  clip-path: var(--theme-vt-clip-from);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

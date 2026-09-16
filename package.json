@@ -12,10 +12,11 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "deploy": "bun run build && wrangler deploy",
+    "cf-typegen": "wrangler types worker-configuration.d.ts",
     "lint": "biome lint .",
     "typecheck": "tsc --noEmit",
-    "test": "bun test src",
-    "prepare": "panda codegen && panda cssgen --outfile src/panda.css"
+    "test": "bun test src"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -31,14 +32,16 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.13",
-    "@pandacss/dev": "^1.3.1",
+    "@tailwindcss/vite": "^4.3.3",
     "@tanstack/router-plugin": "^1.114.3",
     "@types/bun": "^1.2.21",
     "@types/node": "^22.18.6",
     "@types/react": "^19.1.13",
     "@types/react-dom": "^19.1.9",
     "@vitejs/plugin-react": "^5.0.2",
+    "tailwindcss": "^4.3.3",
     "typescript": "~5.9.2",
-    "vite": "^7.1.5"
+    "vite": "^7.1.5",
+    "wrangler": "^4.132.0"
   }
 }

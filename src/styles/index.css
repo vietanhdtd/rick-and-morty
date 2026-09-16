@@ -1,0 +1,27 @@
+@import "tailwindcss";
+@import "../../tokens.css";
+@import "./base.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-surface: var(--color-paper);
+  --color-surface-raised: var(--color-paper-raised);
+  --color-content: var(--color-ink);
+  --color-content-secondary: var(--color-ink-2);
+  --color-content-muted: var(--color-muted);
+  --color-content-on-dark: var(--color-on-dark);
+  --color-content-on-dark-muted: var(--color-on-dark-muted);
+  --color-signal: var(--color-accent);
+  --color-signal-soft: var(--color-accent-soft);
+  --color-signal-ink: var(--color-accent-ink);
+  --color-border: var(--color-rule);
+  --color-border-strong: var(--color-rule-strong);
+  --color-alert: var(--color-danger);
+  --color-status-alive: var(--color-alive);
+  --color-status-dead: var(--color-dead);
+  --color-status-unknown: var(--color-unknown);
+  --color-canvas-dark: var(--color-graphite);
+  --font-guide: var(--font-display);
+  --font-guide-mono: var(--font-mono);
+}
