@@ -84,32 +84,36 @@ export function CollectionPicker({ character }: CollectionPickerProps) {
                 </Popover.Close>
               </div>
               <p className="my-3 text-[0.75rem] text-content-muted">
-                Choose an existing list, or make one for this character.
+                {collections.length > 0
+                  ? 'Choose an existing list, or make one for this character.'
+                  : 'You haven’t created any lists yet.'}
               </p>
-              <div className="max-h-52 overflow-auto border-y border-border py-2">
-                {collections.map((collection) => {
-                  const selected = collection.characterIds.includes(character.id)
-                  return (
-                    <button
-                      key={collection.id}
-                      type="button"
-                      className={`grid min-h-10 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 border p-2 text-left text-[0.8125rem] ${selected ? 'border-signal bg-signal-soft text-signal' : 'border-transparent bg-transparent text-content-secondary'}`}
-                      aria-pressed={selected}
-                      onClick={() => toggleCollection(collection.id, selected)}
-                    >
-                      <span>{collection.name}</span>
-                      <small className="text-[0.625rem] text-content-muted">
-                        {collection.characterIds.length}
-                      </small>
-                      {selected ? (
-                        <Check size={15} aria-hidden="true" />
-                      ) : (
-                        <Plus size={15} aria-hidden="true" />
-                      )}
-                    </button>
-                  )
-                })}
-              </div>
+              {collections.length > 0 && (
+                <div className="max-h-52 overflow-auto border-y border-border py-2">
+                  {collections.map((collection) => {
+                    const selected = collection.characterIds.includes(character.id)
+                    return (
+                      <button
+                        key={collection.id}
+                        type="button"
+                        className={`grid min-h-10 w-full grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2 border p-2 text-left text-[0.8125rem] ${selected ? 'border-signal bg-signal-soft text-signal' : 'border-transparent bg-transparent text-content-secondary'}`}
+                        aria-pressed={selected}
+                        onClick={() => toggleCollection(collection.id, selected)}
+                      >
+                        <span>{collection.name}</span>
+                        <small className="text-[0.625rem] text-content-muted">
+                          {collection.characterIds.length}
+                        </small>
+                        {selected ? (
+                          <Check size={15} aria-hidden="true" />
+                        ) : (
+                          <Plus size={15} aria-hidden="true" />
+                        )}
+                      </button>
+                    )
+                  })}
+                </div>
+              )}
               <AnimatePresence initial={false} mode="wait">
                 {creating ? (
                   <motion.form
