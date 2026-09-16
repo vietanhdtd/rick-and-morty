@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, MapPinned, Users } from "lucide-react";
 import {
@@ -20,13 +20,27 @@ function LocationDetailPage() {
   const residentIds =
     query.data?.residents
       .map(idFromApiUrl)
-      .filter((id): id is number => id !== null)
-      .slice(0, 12) ?? [];
-  const residents = useQuery({
-    queryKey: ["location-residents", locationId, residentIds],
-    queryFn: () => getCharacters(residentIds),
+      .filter((id): id is number => id !== null) ?? [];
+
+  const residents = useInfiniteQuery({
+    queryKey: ["location-residents", locationId],
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => {
+      const chunk = residentIds.slice(pageParam, pageParam + 12);
+      if (chunk.length === 0) return Promise.resolve([]);
+      return getCharacters(chunk);
+    },
+    getNextPageParam: (_, allPages) => {
+      const loadedCount = allPages.flat().length;
+      if (loadedCount < residentIds.length) {
+        return loadedCount;
+      }
+      return undefined;
+    },
     enabled: residentIds.length > 0,
   });
+
+  const residentList = residents.data?.pages.flat() ?? [];
 
   if (query.isPending) return <QueryState kind="loading" label="place" />;
   if (query.isError || !query.data)
@@ -96,15 +110,15 @@ function LocationDetailPage() {
           <QueryState kind="loading" label="residents" />
         ) : residents.isError ? (
           <QueryState kind="error" onRetry={() => residents.refetch()} />
-        ) : residents.data?.length ? (
+        ) : residentList.length ? (
           <>
             <RosterReadout
-              records={residents.data}
+              records={residentList}
               total={location.residents.length}
               noun="residents"
             />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {residents.data.map((character, index) => (
+              {residentList.map((character, index) => (
                 <CharacterCard
                   key={character.id}
                   character={character}
@@ -112,6 +126,19 @@ function LocationDetailPage() {
                 />
               ))}
             </div>
+            {residents.hasNextPage && (
+              <button
+                className="mx-auto mt-8 flex min-h-11 items-center justify-center gap-2 rounded-md border border-signal bg-signal px-4 py-2.5 text-[0.8125rem] font-semibold whitespace-nowrap text-signal-ink transition-[transform,background-color,border-color] duration-150 hover:scale-[1.015] hover:border-content hover:bg-content active:scale-[0.97] disabled:scale-100"
+                type="button"
+                onClick={() => residents.fetchNextPage()}
+                disabled={residents.isFetchingNextPage}
+                aria-busy={residents.isFetchingNextPage}
+              >
+                {residents.isFetchingNextPage
+                  ? "Loading more…"
+                  : "Load more residents"}
+              </button>
+            )}
           </>
         ) : (
           <QueryState kind="empty" label="residents" />

@@ -94,11 +94,11 @@ function CharacterDetailPage() {
               Character
             </p>
           </div>
-          <StatusSignal status={character.status} />
           <h1 className="my-3 text-[clamp(3rem,6vw,5.5rem)]">
             {character.name}
           </h1>
-          <p className="mb-5 text-content-muted">
+          <StatusSignal status={character.status} />
+          <p className="mb-5 mt-3 text-content-muted">
             {character.type || character.species} · {character.gender}
           </p>
           <div className="flex flex-wrap items-center gap-2">

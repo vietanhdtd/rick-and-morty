@@ -31,7 +31,7 @@ function LocationsPage() {
         </p>
       </header>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {query.data.results.map((location, index) => (
+        {query.data.results.map((location) => (
           <Link
             key={location.id}
             to="/locations/$locationId"

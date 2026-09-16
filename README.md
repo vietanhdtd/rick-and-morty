@@ -59,11 +59,6 @@ The application is built with accessibility as a core consideration:
 - **Colour independence & contrast**: Status signals pair color with explicit text labels (`Alive`, `Dead`, `unknown`); contrast ratios comply with WCAG AA in both light and dark themes.
 - **Reduced motion**: Respects `prefers-reduced-motion` across Framer Motion transitions, CSS keyframes, and Lenis smooth scrolling.
 
-## Two-hour scope and trade-offs
-
-The core flow was prioritised over a backend: discover canonical data, search characters, save favourites, group them, return later, and remove either favourites or groups safely. Characters are the saveable entity; locations and episodes provide richer browsing and routed context without multiplying the persistence model.
-
-Persistence is intentionally browser-local rather than account-based. Home-page recommendations are random API draws instead of personalised recommendations, and the application does not require an API proxy or secret. These choices keep the exercise deployable as a static site while preserving a clear state boundary.
 
 ## Quality and deployment
 

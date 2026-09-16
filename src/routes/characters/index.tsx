@@ -8,9 +8,11 @@ import { CharacterCard } from "@/components/character-card";
 import { QueryState } from "@/components/query-state";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 
+const statusFilterOptions = ["all", "alive", "dead", "unknown"] as const;
+
 const searchSchema = z.object({
   q: z.string().catch(""),
-  status: z.enum(["all", "Alive", "Dead", "unknown"]).catch("all"),
+  status: z.enum(statusFilterOptions).catch("all"),
 });
 
 const SUGGESTIONS = [
@@ -123,11 +125,11 @@ function CharactersPage() {
         <div className="flex items-center gap-2 overflow-x-auto border-t border-border px-4 py-3 text-[0.6875rem] text-content-muted">
           <SlidersHorizontal size={15} aria-hidden="true" />
           <span id="status-filter-label">Status</span>
-          {(["all", "Alive", "Dead", "unknown"] as const).map((status) => (
+          {statusFilterOptions.map((status) => (
             <button
               type="button"
               key={status}
-              className={`min-h-9 rounded-md border px-3 py-2 whitespace-nowrap ${search.status === status ? "border-signal bg-signal-soft text-signal" : "border-transparent"}`}
+              className={`min-h-9 rounded-md border px-3 py-2 capitalize whitespace-nowrap ${search.status === status ? "border-signal bg-signal-soft text-signal" : "border-transparent"}`}
               aria-pressed={search.status === status}
               aria-label={`Status: ${status}`}
               onClick={() =>

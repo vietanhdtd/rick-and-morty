@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Clapperboard, Users } from "lucide-react";
 import {
@@ -20,13 +20,27 @@ function EpisodeDetailPage() {
   const characterIds =
     query.data?.characters
       .map(idFromApiUrl)
-      .filter((id): id is number => id !== null)
-      .slice(0, 12) ?? [];
-  const cast = useQuery({
-    queryKey: ["episode-cast", episodeId, characterIds],
-    queryFn: () => getCharacters(characterIds),
+      .filter((id): id is number => id !== null) ?? [];
+
+  const cast = useInfiniteQuery({
+    queryKey: ["episode-cast", episodeId],
+    initialPageParam: 0,
+    queryFn: ({ pageParam }) => {
+      const chunk = characterIds.slice(pageParam, pageParam + 12);
+      if (chunk.length === 0) return Promise.resolve([]);
+      return getCharacters(chunk);
+    },
+    getNextPageParam: (_, allPages) => {
+      const loadedCount = allPages.flat().length;
+      if (loadedCount < characterIds.length) {
+        return loadedCount;
+      }
+      return undefined;
+    },
     enabled: characterIds.length > 0,
   });
+
+  const castList = cast.data?.pages.flat() ?? [];
 
   if (query.isPending) return <QueryState kind="loading" label="episode" />;
   if (query.isError || !query.data)
@@ -104,15 +118,15 @@ function EpisodeDetailPage() {
           <QueryState kind="loading" label="character" />
         ) : cast.isError ? (
           <QueryState kind="error" onRetry={() => cast.refetch()} />
-        ) : cast.data?.length ? (
+        ) : castList.length ? (
           <>
             <RosterReadout
-              records={cast.data}
+              records={castList}
               total={episode.characters.length}
               noun="cast members"
             />
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {cast.data.map((character, index) => (
+              {castList.map((character, index) => (
                 <CharacterCard
                   key={character.id}
                   character={character}
@@ -120,6 +134,19 @@ function EpisodeDetailPage() {
                 />
               ))}
             </div>
+            {cast.hasNextPage && (
+              <button
+                className="mx-auto mt-8 flex min-h-11 items-center justify-center gap-2 rounded-md border border-signal bg-signal px-4 py-2.5 text-[0.8125rem] font-semibold whitespace-nowrap text-signal-ink transition-[transform,background-color,border-color] duration-150 hover:scale-[1.015] hover:border-content hover:bg-content active:scale-[0.97] disabled:scale-100"
+                type="button"
+                onClick={() => cast.fetchNextPage()}
+                disabled={cast.isFetchingNextPage}
+                aria-busy={cast.isFetchingNextPage}
+              >
+                {cast.isFetchingNextPage
+                  ? "Loading more…"
+                  : "Load more characters"}
+              </button>
+            )}
           </>
         ) : (
           <QueryState kind="empty" label="character" />

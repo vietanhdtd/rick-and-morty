@@ -2,6 +2,7 @@ import { createRootRoute, Link, Outlet, useLocation } from '@tanstack/react-rout
 import { Archive, BookMarked, Map as MapIcon, Radio, Search, Tv } from 'lucide-react'
 import { LayoutGroup, motion, useReducedMotion } from 'motion/react'
 import { useEffect } from 'react'
+import { NotFound } from '@/components/not-found'
 import { ThemeToggle } from '@/components/theme-toggle'
 
 const dockIndicatorTransition = {
@@ -173,4 +174,7 @@ function RootLayout() {
   )
 }
 
-export const Route = createRootRoute({ component: RootLayout })
+export const Route = createRootRoute({ 
+  component: RootLayout,
+  notFoundComponent: NotFound 
+})
