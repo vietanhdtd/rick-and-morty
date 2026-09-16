@@ -1,47 +1,47 @@
-import { Dialog } from '@base-ui/react/dialog'
-import { FolderPlus } from 'lucide-react'
-import { type FormEvent, useId, useState } from 'react'
-import { useLibraryStore } from '@/store/library'
-import type { Character, Collection } from '@/types/rick-and-morty'
+import { Dialog } from "@base-ui/react/dialog";
+import { FolderPlus } from "lucide-react";
+import { type FormEvent, useId, useState } from "react";
+import { useLibraryStore } from "@/store/library";
+import type { Character, Collection } from "@/types/rick-and-morty";
 
 type CollectionDialogProps = {
-  character?: Character
-  onCreated?: (collection: Collection) => void
-  triggerLabel?: string
-}
+  character?: Character;
+  onCreated?: (collection: Collection) => void;
+  triggerLabel?: string;
+};
 
 export function CollectionDialog({
   character,
   onCreated,
-  triggerLabel = 'New list',
+  triggerLabel = "New list",
 }: CollectionDialogProps) {
-  const createCollection = useLibraryStore((state) => state.createCollection)
-  const [name, setName] = useState('')
-  const [open, setOpen] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const inputId = useId()
-  const errorId = useId()
+  const createCollection = useLibraryStore((state) => state.createCollection);
+  const [name, setName] = useState("");
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const inputId = useId();
+  const errorId = useId();
 
   function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const result = createCollection(name, character)
-    if (result.status === 'empty') {
-      setError('Give the list a name before creating it.')
-      return
+    event.preventDefault();
+    const result = createCollection(name, character);
+    if (result.status === "empty") {
+      setError("Give the list a name before creating it.");
+      return;
     }
-    if (result.status === 'duplicate') {
-      setError('A list with this name already exists.')
-      return
+    if (result.status === "duplicate") {
+      setError("A list with this name already exists.");
+      return;
     }
-    setName('')
-    setError(null)
-    setOpen(false)
-    onCreated?.(result.collection)
+    setName("");
+    setError(null);
+    setOpen(false);
+    onCreated?.(result.collection);
   }
 
   function handleOpenChange(nextOpen: boolean) {
-    setOpen(nextOpen)
-    if (!nextOpen) setError(null)
+    setOpen(nextOpen);
+    if (!nextOpen) setError(null);
   }
 
   return (
@@ -59,7 +59,7 @@ export function CollectionDialog({
           <Dialog.Description>
             {character
               ? `“${character.name}” will be added right away.`
-              : 'Name a group you can return to later.'}
+              : "Name a group you can return to later."}
           </Dialog.Description>
           <form onSubmit={submit}>
             <label
@@ -76,8 +76,8 @@ export function CollectionDialog({
               autoComplete="off"
               value={name}
               onChange={(event) => {
-                setName(event.target.value)
-                setError(null)
+                setName(event.target.value);
+                setError(null);
               }}
               placeholder="e.g. Characters from Earth"
               maxLength={40}
@@ -108,39 +108,43 @@ export function CollectionDialog({
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
-  )
+  );
 }
 
-export function RenameCollectionDialog({ collection }: { collection: Collection }) {
-  const renameCollection = useLibraryStore((state) => state.renameCollection)
-  const [open, setOpen] = useState(false)
-  const [name, setName] = useState(collection.name)
-  const [error, setError] = useState<string | null>(null)
-  const inputId = useId()
-  const errorId = useId()
+export function RenameCollectionDialog({
+  collection,
+}: {
+  collection: Collection;
+}) {
+  const renameCollection = useLibraryStore((state) => state.renameCollection);
+  const [open, setOpen] = useState(false);
+  const [name, setName] = useState(collection.name);
+  const [error, setError] = useState<string | null>(null);
+  const inputId = useId();
+  const errorId = useId();
 
   function submit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const result = renameCollection(collection.id, name)
-    if (result.status === 'empty') {
-      setError('Give the list a name before saving it.')
-      return
+    event.preventDefault();
+    const result = renameCollection(collection.id, name);
+    if (result.status === "empty") {
+      setError("Give the list a name before saving it.");
+      return;
     }
-    if (result.status === 'duplicate') {
-      setError('A list with this name already exists.')
-      return
+    if (result.status === "duplicate") {
+      setError("A list with this name already exists.");
+      return;
     }
-    setOpen(false)
-    setError(null)
+    setOpen(false);
+    setError(null);
   }
 
   return (
     <Dialog.Root
       open={open}
       onOpenChange={(nextOpen) => {
-        setOpen(nextOpen)
-        if (nextOpen) setName(collection.name)
-        if (!nextOpen) setError(null)
+        setOpen(nextOpen);
+        if (nextOpen) setName(collection.name);
+        if (!nextOpen) setError(null);
       }}
     >
       <Dialog.Trigger
@@ -174,8 +178,8 @@ export function RenameCollectionDialog({ collection }: { collection: Collection 
               aria-invalid={Boolean(error)}
               value={name}
               onChange={(event) => {
-                setName(event.target.value)
-                setError(null)
+                setName(event.target.value);
+                setError(null);
               }}
               maxLength={40}
             />
@@ -203,5 +207,5 @@ export function RenameCollectionDialog({ collection }: { collection: Collection 
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
-  )
+  );
 }

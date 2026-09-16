@@ -1,28 +1,31 @@
-import { useQuery } from '@tanstack/react-query'
-import { createFileRoute, Link } from '@tanstack/react-router'
-import { ArrowRight, Clapperboard, Radio } from 'lucide-react'
-import { useState } from 'react'
-import { getPage, queryKeys } from '@/api/rick-and-morty'
-import { QueryState } from '@/components/query-state'
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { ArrowRight, Clapperboard, Radio } from "lucide-react";
+import { useState } from "react";
+import { getPage, queryKeys } from "@/api/rick-and-morty";
+import { QueryState } from "@/components/query-state";
 
 function EpisodesPage() {
-  const [page, setPage] = useState(1)
+  const [page, setPage] = useState(1);
   const query = useQuery({
-    queryKey: queryKeys.page('episode', { page }),
-    queryFn: () => getPage('episode', { page }),
-  })
-  if (query.isPending) return <QueryState kind="loading" label="episode" />
+    queryKey: queryKeys.page("episode", { page }),
+    queryFn: () => getPage("episode", { page }),
+  });
+  if (query.isPending) return <QueryState kind="loading" label="episode" />;
   if (query.isError || !query.data)
-    return <QueryState kind="error" onRetry={() => query.refetch()} />
+    return <QueryState kind="error" onRetry={() => query.refetch()} />;
   return (
     <section className="px-4 pt-12 sm:px-8 lg:px-16">
       <header className="mb-6 max-w-3xl">
         <p className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
           Episodes / {query.data.info.count} total
         </p>
-        <h1 className="mb-4 text-[clamp(2.6rem,6vw,5.7rem)]">Every episode, in one place.</h1>
+        <h1 className="mb-4 text-[clamp(2.6rem,6vw,5.7rem)]">
+          Every episode, in one place.
+        </h1>
         <p className="max-w-[52ch] text-content-secondary">
-          Browse the episodes and use each cast list to find your next character.
+          Browse the episodes and use each cast list to find your next
+          character.
         </p>
       </header>
       <div className="border-t border-border">
@@ -31,16 +34,27 @@ function EpisodesPage() {
             className="grid grid-cols-[4.5rem_minmax(0,1fr)_1.5rem] items-center gap-2 border-b border-border py-3 sm:grid-cols-[7rem_minmax(0,1fr)_auto_2rem] sm:gap-4"
             key={episode.id}
           >
-            <div className="flex items-center gap-2 text-[0.6875rem] text-signal">
+            <div className="flex items-center gap-2 text-[0.6875rem]">
               <Clapperboard size={18} aria-hidden="true" />
               <span>{episode.episode}</span>
             </div>
             <div>
-              <h2 className="mb-1 text-xl">{episode.name}</h2>
-              <p className="text-[0.75rem] text-content-muted">Air date: {episode.air_date}</p>
+              <Link
+                to="/episodes/$episodeId"
+                params={{ episodeId: String(episode.id) }}
+                aria-label={`View episode: ${episode.name}`}
+              >
+                <h2 className="mb-1 text-signal text-xl hover:underline">
+                  {episode.name}
+                </h2>
+              </Link>
+              <p className="text-[0.75rem] text-content-muted">
+                Air date: {episode.air_date}
+              </p>
             </div>
             <div className="hidden items-center gap-1 text-[0.75rem] text-content-muted sm:flex">
-              <Radio size={14} aria-hidden="true" /> {episode.characters.length} characters
+              <Radio size={14} aria-hidden="true" /> {episode.characters.length}{" "}
+              characters
             </div>
             <Link
               to="/episodes/$episodeId"
@@ -80,7 +94,7 @@ function EpisodesPage() {
         </button>
       </nav>
     </section>
-  )
+  );
 }
 
-export const Route = createFileRoute('/episodes/')({ component: EpisodesPage })
+export const Route = createFileRoute("/episodes/")({ component: EpisodesPage });

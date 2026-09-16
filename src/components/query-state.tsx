@@ -1,18 +1,18 @@
-import { RotateCw, TriangleAlert } from 'lucide-react'
+import { RotateCw, TriangleAlert } from "lucide-react";
 
 export function QueryState({
   kind,
   onRetry,
-  label = 'result',
+  label = "result",
 }: {
-  kind: 'loading' | 'error' | 'empty'
-  onRetry?: () => void
-  label?: string
+  kind: "loading" | "error" | "empty";
+  onRetry?: () => void;
+  label?: string;
 }) {
-  if (kind === 'loading')
+  if (kind === "loading")
     return (
       <div
-        className="flex min-h-44 flex-col items-center justify-center gap-2 border border-dashed border-border-strong p-5 text-center text-[0.875rem] text-content-muted"
+        className="flex min-h-[calc(100vh-200px)] flex-col items-center justify-center gap-2 border border-dashed border-border-strong p-5 text-center text-[0.875rem] text-content-muted"
         role="status"
         aria-live="polite"
       >
@@ -22,8 +22,8 @@ export function QueryState({
         />
         Loading {label}…
       </div>
-    )
-  if (kind === 'empty')
+    );
+  if (kind === "empty")
     return (
       <div
         className="flex min-h-44 flex-col items-center justify-center gap-2 border border-dashed border-border-strong p-5 text-center text-[0.875rem] text-content-muted"
@@ -33,7 +33,7 @@ export function QueryState({
         <p>No {label} match your search.</p>
         <span>Try a different name or filter.</span>
       </div>
-    )
+    );
   return (
     <div
       className="flex min-h-44 flex-col items-center justify-center gap-2 border border-dashed border-alert p-5 text-center text-[0.875rem] text-alert"
@@ -51,5 +51,5 @@ export function QueryState({
         </button>
       )}
     </div>
-  )
+  );
 }

@@ -41,7 +41,7 @@ function EpisodeDetailPage() {
       >
         <ArrowLeft size={16} aria-hidden="true" /> Back to episodes
       </Link>
-      <div className="mb-5 flex min-h-56 items-end gap-5 border border-border bg-surface-raised p-5 text-content-secondary sm:p-10 dark:border-transparent dark:bg-canvas-dark dark:text-content-on-dark">
+      <div className="mb-5 flex min-h-56 items-end gap-5 border border-border bg-surface-raised p-5 text-content-secondary sm:p-10">
         <div className="mb-auto text-signal">
           <Clapperboard className="size-12" aria-hidden="true" />
         </div>

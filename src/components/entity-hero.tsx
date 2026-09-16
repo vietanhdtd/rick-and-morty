@@ -1,8 +1,8 @@
-import { Link } from '@tanstack/react-router'
-import { ArrowUpRight, MapPin, Radio, Tv } from 'lucide-react'
-import { motion } from 'motion/react'
-import { StatusSignal } from '@/components/status-signal'
-import type { Character, Episode, Location } from '@/types/rick-and-morty'
+import { Link } from "@tanstack/react-router";
+import { ArrowUpRight, MapPin, Radio, Tv } from "lucide-react";
+import { motion } from "motion/react";
+import { StatusSignal } from "@/components/status-signal";
+import type { Character, Episode, Location } from "@/types/rick-and-morty";
 
 export function CharacterSignal({ character }: { character: Character }) {
   return (
@@ -38,7 +38,7 @@ export function CharacterSignal({ character }: { character: Character }) {
         </Link>
       </div>
     </motion.article>
-  )
+  );
 }
 
 export function LocationSignal({ location }: { location: Location }) {
@@ -54,24 +54,28 @@ export function LocationSignal({ location }: { location: Location }) {
         <span className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
           Place
         </span>
-        <h2 className="my-2 text-[clamp(1.75rem,3vw,2.65rem)]">{location.name}</h2>
+        <h2 className="my-2 text-[clamp(1.75rem,3vw,2.65rem)]">
+          {location.name}
+        </h2>
         <p className="text-[0.8125rem] leading-relaxed text-content-muted">
-          {location.type || 'Unknown place'} · {location.dimension}
+          {location.type || "Unknown place"} · {location.dimension}
         </p>
-        <small className="text-[0.8125rem] leading-relaxed text-content-muted">
-          {location.residents.length} residents
-        </small>
-        <Link
-          to="/locations/$locationId"
-          params={{ locationId: String(location.id) }}
-          aria-label={`View place: ${location.name}`}
-          className="mt-3 inline-flex items-center gap-1 text-[0.8125rem] font-semibold text-signal hover:underline"
-        >
-          View place <ArrowUpRight size={16} aria-hidden="true" />
-        </Link>
+        <div className="flex justify-between items-center mt-2">
+          <small className="text-[0.8125rem] leading-relaxed text-content-muted">
+            {location.residents.length} residents
+          </small>
+          <Link
+            to="/locations/$locationId"
+            params={{ locationId: String(location.id) }}
+            aria-label={`View place: ${location.name}`}
+            className="inline-flex items-center gap-1 text-[0.8125rem] font-semibold text-signal hover:underline"
+          >
+            View place <ArrowUpRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
       </div>
     </motion.article>
-  )
+  );
 }
 
 export function EpisodeSignal({ episode }: { episode: Episode }) {
@@ -87,23 +91,30 @@ export function EpisodeSignal({ episode }: { episode: Episode }) {
         <span className="mb-3 flex items-center gap-1.5 text-[0.625rem] tracking-[0.08em] text-signal uppercase">
           Episode
         </span>
-        <h2 className="my-2 text-[clamp(1.75rem,3vw,2.65rem)]">{episode.name}</h2>
+        <h2 className="my-2 text-[clamp(1.75rem,3vw,2.65rem)]">
+          {episode.name}
+        </h2>
         <p className="text-[0.8125rem] leading-relaxed text-content-muted">
           {episode.episode} · {episode.air_date}
         </p>
-        <small className="text-[0.8125rem] leading-relaxed text-content-muted">
-          {episode.characters.length} characters
-        </small>
-        <Link
-          to="/episodes/$episodeId"
-          params={{ episodeId: String(episode.id) }}
-          aria-label={`View episode: ${episode.name}`}
-          className="mt-3 inline-flex items-center gap-1 text-[0.8125rem] font-semibold text-signal hover:underline"
-        >
-          View episode <ArrowUpRight size={16} aria-hidden="true" />
-        </Link>
+        <div className="flex justify-between items-center mt-2">
+          <small className="text-[0.8125rem] leading-relaxed text-content-muted">
+            {episode.characters.length} characters
+          </small>
+          <Link
+            to="/episodes/$episodeId"
+            params={{ episodeId: String(episode.id) }}
+            aria-label={`View episode: ${episode.name}`}
+            className="mt-3 inline-flex items-center gap-1 text-[0.8125rem] font-semibold text-signal hover:underline"
+          >
+            View episode <ArrowUpRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
       </div>
-      <Radio className="absolute top-5 right-5 text-signal" aria-hidden="true" />
+      <Radio
+        className="absolute top-5 right-5 text-signal"
+        aria-hidden="true"
+      />
     </motion.article>
-  )
+  );
 }

@@ -1,23 +1,27 @@
-import { Link } from '@tanstack/react-router'
-import { CalendarDays, Radio } from 'lucide-react'
-import { useState } from 'react'
-import type { Episode } from '@/types/rick-and-morty'
+import { Link } from "@tanstack/react-router";
+import { CalendarDays, Radio } from "lucide-react";
+import { useState } from "react";
+import type { Episode } from "@/types/rick-and-morty";
 
-const PREVIEW_LIMIT = 12
+const PREVIEW_LIMIT = 12;
 
 function episodeOrder(value: string) {
-  const match = value.match(/^S(\d+)E(\d+)$/)
-  return match ? Number(match[1]) * 1_000 + Number(match[2]) : Number.MAX_SAFE_INTEGER
+  const match = value.match(/^S(\d+)E(\d+)$/);
+  return match
+    ? Number(match[1]) * 1_000 + Number(match[2])
+    : Number.MAX_SAFE_INTEGER;
 }
 
 export function AppearanceLedger({ episodes }: { episodes: Episode[] }) {
-  const [showAll, setShowAll] = useState(false)
+  const [showAll, setShowAll] = useState(false);
   const orderedEpisodes = [...episodes].sort(
     (left, right) => episodeOrder(left.episode) - episodeOrder(right.episode),
-  )
-  const visibleEpisodes = showAll ? orderedEpisodes : orderedEpisodes.slice(0, PREVIEW_LIMIT)
-  const firstAppearance = orderedEpisodes[0]
-  const latestAppearance = orderedEpisodes.at(-1)
+  );
+  const visibleEpisodes = showAll
+    ? orderedEpisodes
+    : orderedEpisodes.slice(0, PREVIEW_LIMIT);
+  const firstAppearance = orderedEpisodes[0];
+  const latestAppearance = orderedEpisodes.at(-1);
 
   return (
     <section className="mt-12" aria-labelledby="appearance-ledger-heading">
@@ -39,13 +43,13 @@ export function AppearanceLedger({ episodes }: { episodes: Episode[] }) {
             First appearance
           </span>
           <strong className="text-[1.35rem] text-content">
-            {firstAppearance?.episode ?? 'Unknown'}
+            {firstAppearance?.episode ?? "Unknown"}
           </strong>
           {firstAppearance && (
             <Link
               to="/episodes/$episodeId"
               params={{ episodeId: String(firstAppearance.id) }}
-              className="break-words font-semibold text-signal"
+              className="break-words font-medium text-signal hover:underline"
             >
               {firstAppearance.name}
             </Link>
@@ -56,13 +60,13 @@ export function AppearanceLedger({ episodes }: { episodes: Episode[] }) {
             Latest appearance
           </span>
           <strong className="text-[1.35rem] text-content">
-            {latestAppearance?.episode ?? 'Unknown'}
+            {latestAppearance?.episode ?? "Unknown"}
           </strong>
           {latestAppearance && (
             <Link
               to="/episodes/$episodeId"
               params={{ episodeId: String(latestAppearance.id) }}
-              className="break-words font-semibold text-signal"
+              className="break-words font-medium text-signal hover:underline"
             >
               {latestAppearance.name}
             </Link>
@@ -70,7 +74,10 @@ export function AppearanceLedger({ episodes }: { episodes: Episode[] }) {
         </article>
       </div>
 
-      <ol id="appearance-ledger-list" className="m-0 list-none border-t border-border p-0">
+      <ol
+        id="appearance-ledger-list"
+        className="m-0 list-none border-t border-border p-0"
+      >
         {visibleEpisodes.map((episode) => (
           <li
             className="grid grid-cols-[4.75rem_minmax(0,1fr)] items-center gap-3 border-b border-border py-3 sm:grid-cols-[6rem_minmax(0,1fr)_auto]"
@@ -82,7 +89,7 @@ export function AppearanceLedger({ episodes }: { episodes: Episode[] }) {
             <Link
               to="/episodes/$episodeId"
               params={{ episodeId: String(episode.id) }}
-              className="break-words font-semibold text-signal"
+              className="break-words font-medium text-signal hover:underline"
             >
               {episode.name}
             </Link>
@@ -101,9 +108,11 @@ export function AppearanceLedger({ episodes }: { episodes: Episode[] }) {
           aria-controls="appearance-ledger-list"
           onClick={() => setShowAll((value) => !value)}
         >
-          {showAll ? 'Show fewer episodes' : `Show all ${orderedEpisodes.length} episodes`}
+          {showAll
+            ? "Show fewer episodes"
+            : `Show all ${orderedEpisodes.length} episodes`}
         </button>
       )}
     </section>
-  )
+  );
 }
